@@ -8,22 +8,36 @@
 
 /* Begin PBXBuildFile section */
 		8BCA39D227EE44F100288B13 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39D127EE44F100288B13 /* AppDelegate.swift */; };
-		8BCA39D427EE44F100288B13 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39D327EE44F100288B13 /* SceneDelegate.swift */; };
-		8BCA39D627EE44F100288B13 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39D527EE44F100288B13 /* ViewController.swift */; };
-		8BCA39D927EE44F100288B13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BCA39D727EE44F100288B13 /* Main.storyboard */; };
 		8BCA39DB27EE44F200288B13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCA39DA27EE44F200288B13 /* Assets.xcassets */; };
 		8BCA39DE27EE44F200288B13 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BCA39DC27EE44F200288B13 /* LaunchScreen.storyboard */; };
+		8BCA39F327EE455700288B13 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39E727EE455700288B13 /* Coordinator.swift */; };
+		8BCA39F427EE455700288B13 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39E927EE455700288B13 /* Constants.swift */; };
+		8BCA39F527EE455700288B13 /* UIIVew + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39EB27EE455700288B13 /* UIIVew + Ext.swift */; };
+		8BCA39F727EE455700288B13 /* UIFont + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39ED27EE455700288B13 /* UIFont + Ext.swift */; };
+		8BCA39F927EE455700288B13 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39F227EE455700288B13 /* AuthViewController.swift */; };
+		8BCA39FE27EE46A500288B13 /* URL + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39FD27EE46A500288B13 /* URL + Ext.swift */; };
+		8BCA3A0427EE499B00288B13 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA3A0327EE499B00288B13 /* WebViewController.swift */; };
+		8BCA3A0627EE5A9400288B13 /* VKClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA3A0527EE5A9400288B13 /* VKClient.swift */; };
+		8BCA3A0927EE5C0A00288B13 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA3A0827EE5C0A00288B13 /* Storage.swift */; };
+		8BF389A427EF058500B6ED75 /* TTError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF389A327EF058500B6ED75 /* TTError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8BCA39CE27EE44F100288B13 /* TestTaskMobileUP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestTaskMobileUP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BCA39D127EE44F100288B13 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8BCA39D327EE44F100288B13 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8BCA39D527EE44F100288B13 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		8BCA39D827EE44F100288B13 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8BCA39DA27EE44F200288B13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8BCA39DD27EE44F200288B13 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8BCA39DF27EE44F200288B13 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8BCA39E727EE455700288B13 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		8BCA39E927EE455700288B13 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		8BCA39EB27EE455700288B13 /* UIIVew + Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIIVew + Ext.swift"; sourceTree = "<group>"; };
+		8BCA39ED27EE455700288B13 /* UIFont + Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont + Ext.swift"; sourceTree = "<group>"; };
+		8BCA39F227EE455700288B13 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		8BCA39FD27EE46A500288B13 /* URL + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL + Ext.swift"; sourceTree = "<group>"; };
+		8BCA3A0327EE499B00288B13 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		8BCA3A0527EE5A9400288B13 /* VKClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKClient.swift; sourceTree = "<group>"; };
+		8BCA3A0827EE5C0A00288B13 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		8BF389A327EF058500B6ED75 /* TTError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +70,118 @@
 		8BCA39D027EE44F100288B13 /* TestTaskMobileUP */ = {
 			isa = PBXGroup;
 			children = (
-				8BCA39D127EE44F100288B13 /* AppDelegate.swift */,
-				8BCA39D327EE44F100288B13 /* SceneDelegate.swift */,
-				8BCA39D527EE44F100288B13 /* ViewController.swift */,
-				8BCA39D727EE44F100288B13 /* Main.storyboard */,
-				8BCA39DA27EE44F200288B13 /* Assets.xcassets */,
-				8BCA39DC27EE44F200288B13 /* LaunchScreen.storyboard */,
-				8BCA39DF27EE44F200288B13 /* Info.plist */,
+				8BF389A227EF055D00B6ED75 /* Errors */,
+				8BCA3A0727EE5BCE00288B13 /* Storage */,
+				8BCA39FA27EE461200288B13 /* VK API */,
+				8BCA39E627EE455700288B13 /* Coordinators */,
+				8BCA39EA27EE455700288B13 /* Extensions */,
+				8BCA39E827EE455700288B13 /* Helpers */,
+				8BCA39EE27EE455700288B13 /* Managers */,
+				8BCA39F027EE455700288B13 /* Screens */,
+				8BCA39E527EE450400288B13 /* Supporting Files */,
 			);
 			path = TestTaskMobileUP;
+			sourceTree = "<group>";
+		};
+		8BCA39E527EE450400288B13 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA39DA27EE44F200288B13 /* Assets.xcassets */,
+				8BCA39DF27EE44F200288B13 /* Info.plist */,
+				8BCA39DC27EE44F200288B13 /* LaunchScreen.storyboard */,
+				8BCA39D127EE44F100288B13 /* AppDelegate.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8BCA39E627EE455700288B13 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA39E727EE455700288B13 /* Coordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		8BCA39E827EE455700288B13 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA39E927EE455700288B13 /* Constants.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		8BCA39EA27EE455700288B13 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA39EB27EE455700288B13 /* UIIVew + Ext.swift */,
+				8BCA39ED27EE455700288B13 /* UIFont + Ext.swift */,
+				8BCA39FD27EE46A500288B13 /* URL + Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		8BCA39EE27EE455700288B13 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		8BCA39F027EE455700288B13 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				8BF389A727EF111200B6ED75 /* Gallery */,
+				8BCA39F127EE455700288B13 /* Auth */,
+				8BCA3A0227EE498100288B13 /* WebView */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		8BCA39F127EE455700288B13 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA39F227EE455700288B13 /* AuthViewController.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		8BCA39FA27EE461200288B13 /* VK API */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA3A0527EE5A9400288B13 /* VKClient.swift */,
+			);
+			path = "VK API";
+			sourceTree = "<group>";
+		};
+		8BCA3A0227EE498100288B13 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA3A0327EE499B00288B13 /* WebViewController.swift */,
+			);
+			path = WebView;
+			sourceTree = "<group>";
+		};
+		8BCA3A0727EE5BCE00288B13 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				8BCA3A0827EE5C0A00288B13 /* Storage.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		8BF389A227EF055D00B6ED75 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				8BF389A327EF058500B6ED75 /* TTError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		8BF389A727EF111200B6ED75 /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Gallery;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,6 +194,7 @@
 				8BCA39CA27EE44F100288B13 /* Sources */,
 				8BCA39CB27EE44F100288B13 /* Frameworks */,
 				8BCA39CC27EE44F100288B13 /* Resources */,
+				8BF389A827EF125100B6ED75 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -127,34 +245,53 @@
 			files = (
 				8BCA39DE27EE44F200288B13 /* LaunchScreen.storyboard in Resources */,
 				8BCA39DB27EE44F200288B13 /* Assets.xcassets in Resources */,
-				8BCA39D927EE44F100288B13 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8BF389A827EF125100B6ED75 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"error: SwiftLint does not exist, download it from https://github.com/realm/SwiftLint\"\n    exit 1\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8BCA39CA27EE44F100288B13 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8BCA39D627EE44F100288B13 /* ViewController.swift in Sources */,
+				8BF389A427EF058500B6ED75 /* TTError.swift in Sources */,
+				8BCA39F327EE455700288B13 /* Coordinator.swift in Sources */,
+				8BCA3A0627EE5A9400288B13 /* VKClient.swift in Sources */,
+				8BCA3A0427EE499B00288B13 /* WebViewController.swift in Sources */,
+				8BCA39FE27EE46A500288B13 /* URL + Ext.swift in Sources */,
 				8BCA39D227EE44F100288B13 /* AppDelegate.swift in Sources */,
-				8BCA39D427EE44F100288B13 /* SceneDelegate.swift in Sources */,
+				8BCA39F927EE455700288B13 /* AuthViewController.swift in Sources */,
+				8BCA39F527EE455700288B13 /* UIIVew + Ext.swift in Sources */,
+				8BCA39F727EE455700288B13 /* UIFont + Ext.swift in Sources */,
+				8BCA39F427EE455700288B13 /* Constants.swift in Sources */,
+				8BCA3A0927EE5C0A00288B13 /* Storage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		8BCA39D727EE44F100288B13 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8BCA39D827EE44F100288B13 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		8BCA39DC27EE44F200288B13 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -291,12 +428,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X954LPBPCP;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TestTaskMobileUP/Info.plist;
+				INFOPLIST_FILE = "TestTaskMobileUP/Supporting Files/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -306,7 +443,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -319,12 +456,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X954LPBPCP;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TestTaskMobileUP/Info.plist;
+				INFOPLIST_FILE = "TestTaskMobileUP/Supporting Files/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -334,7 +471,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
