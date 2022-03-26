@@ -15,8 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        coordinator = .init(window: window!)
         
+        UIBarButtonItem.appearance().setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+        
+        coordinator = .init(window: window!)
         coordinator?.start()
         window?.makeKeyAndVisible()
         return true
