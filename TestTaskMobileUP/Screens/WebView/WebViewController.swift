@@ -10,11 +10,16 @@ import WebKit
 
 class WebViewController: UIViewController {
 
-    private var webView: WKWebView = .init()
-    private var completed: (Result<String, Error>) -> Void?
+    private let webView: WKWebView = .init()
+    private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
     
-    init(completed: @escaping (Result<String, Error>) -> Void) {
+    private let completed: (Result<String, Error>) -> Void?
+    private let request: URLRequest
+    
+    
+    init(request: URLRequest, completed: @escaping (Result<String, Error>) -> Void) {
         self.completed = completed
+        self.request = request
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,10 +41,18 @@ class WebViewController: UIViewController {
     
     private func configureWebView() {
         webView.navigationDelegate = self
+        webView.addSubViews(activityIndicator)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: webView.centerYAnchor)
+        ])
+        activityIndicator.hidesWhenStopped = true
     }
     
     private func startLoading() {
-        webView.load(VKClient.login())
+        webView.load(request)
+        activityIndicator.startAnimating()
     }
 }
 
@@ -47,12 +60,12 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
-            if let token = VKClient.getTokenFrom(url: url) {
+            if let token = URLLogic.getTokenFrom(url: url) {
                 dismiss(animated: true, completion: nil)
                 decisionHandler(.cancel)
                 completed(.success(token))
                 return
-            } else if VKClient.isAccessDenied(url: url) {
+            } else if URLLogic.isAccessDenied(url: url) {
                 dismiss(animated: true, completion: nil)
                 decisionHandler(.cancel)
                 completed(.failure(TTError.accessDenied))
@@ -61,8 +74,13 @@ extension WebViewController: WKNavigationDelegate {
         }
         decisionHandler(.allow)
     }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        activityIndicator.stopAnimating()
+    }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        activityIndicator.stopAnimating()
         completed(.failure(error))
         dismiss(animated: true, completion: nil)
     }
