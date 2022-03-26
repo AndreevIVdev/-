@@ -17,3 +17,7 @@ enum Design {
     static let buttonHeight: CGFloat = 55
     static let cornerRadius: CGFloat = 5
 }
+
+enum Images {
+    static let placeholder: UIImage = .init(named: "placeholder")!
+}
