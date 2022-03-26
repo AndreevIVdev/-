@@ -9,4 +9,8 @@ import Foundation
 
 enum TTError: String, Error {
     case accessDenied
+    case noData
+    case stockError
+    case urlError
+    case invalidResponse
 }

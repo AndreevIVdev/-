@@ -7,17 +7,12 @@
 
 import Foundation
 
-class VKClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
-    
-    lazy var connection: URLSession = {
-        let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
-        return session
-    }()
+enum VKClient {
 
-    static func login() -> URLRequest {
-        
+    static func login() -> URLRequest? {
+        guard let url = URLLogic.loginURL() else { return nil }
         var request = URLRequest(
-            url: URLLogic.urlFor(actionTask: .login),
+            url: url,
             cachePolicy: .reloadIgnoringLocalCacheData,
             timeoutInterval: 60000
         )
@@ -26,18 +21,15 @@ class VKClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
         return request
     }
     
-    static func getTokenFrom(url: URL) -> String? {
-        URLLogic.getTokenFrom(url: url)
-    }
-    
-    static func isAccessDenied(url: URL) -> Bool {
-        URLLogic.isAccessDenied(url: url)
+    static func photosURL(with token: String) -> URL? {
+        URLLogic.photosURL(with: token)
     }
 }
 
-private enum URLLogic {
+enum URLLogic {
     
-    static func urlFor(actionTask: ActionTask, addition: String? = nil) -> URL {
+    // swiftlint:disable:next strict_fileprivate
+    fileprivate static func loginURL() -> URL? {
         let clientID = "8115098"
         let redirectURL = "&redirect_uri=https://oauth.vk.com/blank.html"
         let display = "&display=page"
@@ -45,17 +37,27 @@ private enum URLLogic {
         let responseType = "&response_type=token"
         let tokenV = "&v=5.131"
         
-        switch actionTask {
-        case .login:
-            guard let url = URL(
-                string: actionTask.rawValue + clientID + display + redirectURL + scope + responseType + tokenV
-            ) else { return URL("https://ya.ru") }
-            return url
-        }
+        return .init(
+            string: BaseURLs.login.rawValue + clientID + display + redirectURL + scope + responseType + tokenV
+        )
     }
     
-    enum ActionTask: String {
+    // swiftlint:disable:next strict_fileprivate
+    fileprivate static func photosURL(with token: String) -> URL? {
+    
+        let ownerID = "-128666765"
+        let albumID = "&album_id=266276915"
+        let accseccToken = "&access_token="
+        let tokenV = "&v=5.131"
+        
+        return .init(
+            string: BaseURLs.photos.rawValue + ownerID + albumID + accseccToken + token + tokenV
+        )
+    }
+    
+    private enum BaseURLs: String {
         case login = "https://oauth.vk.com/authorize?client_id="
+        case photos = "https://api.vk.com/method/photos.get?owner_id="
     }
     
     static func getTokenFrom(url: URL) -> String? {
