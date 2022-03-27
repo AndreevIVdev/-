@@ -25,6 +25,9 @@
 		8BF389B027EF214000B6ED75 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF389AF27EF214000B6ED75 /* GalleryViewController.swift */; };
 		8BF389B227EF237700B6ED75 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF389B127EF237700B6ED75 /* UIHelper.swift */; };
 		8BF389B727EF241B00B6ED75 /* GalleryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF389B627EF241B00B6ED75 /* GalleryCollectionViewCell.swift */; };
+		8BFD75BB27EF5BC00074A277 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75BA27EF5BC00074A277 /* PhotoViewController.swift */; };
+		8BFD75BD27EF66EA0074A277 /* UIImageView + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75BC27EF66EA0074A277 /* UIImageView + Ext.swift */; };
+		8BFD75BF27EF8C490074A277 /* Int + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75BE27EF8C490074A277 /* Int + Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +51,9 @@
 		8BF389AF27EF214000B6ED75 /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		8BF389B127EF237700B6ED75 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		8BF389B627EF241B00B6ED75 /* GalleryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewCell.swift; sourceTree = "<group>"; };
+		8BFD75BA27EF5BC00074A277 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
+		8BFD75BC27EF66EA0074A277 /* UIImageView + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView + Ext.swift"; sourceTree = "<group>"; };
+		8BFD75BE27EF8C490074A277 /* Int + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int + Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +133,8 @@
 				8BCA39EB27EE455700288B13 /* UIIVew + Ext.swift */,
 				8BCA39ED27EE455700288B13 /* UIFont + Ext.swift */,
 				8BCA39FD27EE46A500288B13 /* URL + Ext.swift */,
+				8BFD75BC27EF66EA0074A277 /* UIImageView + Ext.swift */,
+				8BFD75BE27EF8C490074A277 /* Int + Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -142,9 +150,10 @@
 		8BCA39F027EE455700288B13 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				8BF389A727EF111200B6ED75 /* Gallery */,
 				8BCA39F127EE455700288B13 /* Auth */,
 				8BCA3A0227EE498100288B13 /* WebView */,
+				8BF389A727EF111200B6ED75 /* Gallery */,
+				8BFD75B927EF5B830074A277 /* Photo */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -221,6 +230,14 @@
 				8BF389B627EF241B00B6ED75 /* GalleryCollectionViewCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		8BFD75B927EF5B830074A277 /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				8BFD75BA27EF5BC00074A277 /* PhotoViewController.swift */,
+			);
+			path = Photo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,13 +335,16 @@
 				8BF389B727EF241B00B6ED75 /* GalleryCollectionViewCell.swift in Sources */,
 				8BF389B027EF214000B6ED75 /* GalleryViewController.swift in Sources */,
 				8BCA39F327EE455700288B13 /* Coordinator.swift in Sources */,
+				8BFD75BD27EF66EA0074A277 /* UIImageView + Ext.swift in Sources */,
 				8BCA3A0627EE5A9400288B13 /* VKClient.swift in Sources */,
 				8BF389AE27EF207200B6ED75 /* NetworkManager.swift in Sources */,
 				8BF389AC27EF1D7700B6ED75 /* Model.swift in Sources */,
 				8BCA3A0427EE499B00288B13 /* WebViewController.swift in Sources */,
 				8BCA39FE27EE46A500288B13 /* URL + Ext.swift in Sources */,
 				8BF389B227EF237700B6ED75 /* UIHelper.swift in Sources */,
+				8BFD75BB27EF5BC00074A277 /* PhotoViewController.swift in Sources */,
 				8BCA39D227EE44F100288B13 /* AppDelegate.swift in Sources */,
+				8BFD75BF27EF8C490074A277 /* Int + Ext.swift in Sources */,
 				8BCA39F927EE455700288B13 /* AuthViewController.swift in Sources */,
 				8BCA39F527EE455700288B13 /* UIIVew + Ext.swift in Sources */,
 				8BCA39F727EE455700288B13 /* UIFont + Ext.swift in Sources */,

@@ -33,7 +33,8 @@ final class Coordinator {
                     self.navigationController.viewControllers = [
                         GalleryViewController(
                             token: token,
-                            signOut: self.handleSignOut
+                            signOut: self.handleSignOut,
+                            choosen: self.handleGalleryTap(index:dataSource:)
                         )
                     ]
                     self.window.rootViewController = self.navigationController
@@ -65,5 +66,15 @@ final class Coordinator {
     
     private func handleSignOut() {
         authManager.logoutFromCurrentAccount()
+    }
+    
+    private func handleGalleryTap(index: Int, dataSource: [Photo]) {
+        navigationController.pushViewController(
+            PhotoViewController(
+                initialIndex: index,
+                datasource: dataSource
+            ),
+            animated: true
+        )
     }
 }

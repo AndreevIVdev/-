@@ -18,10 +18,16 @@ class GalleryViewController: UIViewController {
     
     private let token: String
     private let signOut: (() -> Void)
+    private let choosen: (Int, [Photo]) -> Void
     
-    init(token: String, signOut: @escaping (() -> Void)) {
+    init(
+        token: String,
+        signOut: @escaping () -> Void,
+        choosen: @escaping (Int, [Photo]) -> Void
+    ) {
         self.token = token
         self.signOut = signOut
+        self.choosen = choosen
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -34,22 +40,27 @@ class GalleryViewController: UIViewController {
         configureCollectionView()
         configureViewController()
         configureDataSource()
-        fetchFotos(token: token)
+        DispatchQueue.global().async {
+            self.fetchFotos(token: self.token)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationItem.rightBarButtonItem = .init(
-            title: "Выход",
-            style: .plain,
-            target: self,
-            action: #selector(exitButtonTapped)
-        )
+        navigationItem.backButtonTitle = ""
+        
+        let signOutButton = UIBarButtonItem()
+        signOutButton.title = "Выход"
+        signOutButton.tintColor = .label
+        signOutButton.action = #selector(signOutButtonTapped)
+        signOutButton.target = self
+
+        navigationItem.rightBarButtonItem = signOutButton
     }
     
-    @objc private func exitButtonTapped() {
+    @objc private func signOutButtonTapped() {
         signOut()
     }
     
@@ -118,4 +129,8 @@ class GalleryViewController: UIViewController {
     }
 }
     
-extension GalleryViewController: UICollectionViewDelegate {}
+extension GalleryViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        choosen(indexPath.row, photos)
+    }
+}
