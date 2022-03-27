@@ -81,18 +81,7 @@ legacy_hashing: error
 
 identifier_name:
   excluded:
-    - i
     - id
-    - x
-    - y
-    - z
-    - m
-    - o
-    - p
-    - q
-    - r
-    - s
-    - w
 
 line_length:
   ignores_urls: true
