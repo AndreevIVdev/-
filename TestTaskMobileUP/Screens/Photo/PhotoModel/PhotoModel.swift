@@ -11,6 +11,7 @@ import Combine
 protocol PhotoModable: AnyObject {
     var photosCount: PassthroughSubject<Int, Never> { get }
     var initializationDone: PassthroughSubject<Void, Never> { get }
+    var error: PassthroughSubject<Error, Never> { get }
     func getPhoto(with size: PhotoSize, for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void)
     func getTitle(for index: Int) -> Int?
     func initialize()
@@ -30,6 +31,7 @@ class PhotoModel: PhotoModable {
     private var bindings: Set<AnyCancellable> = .init()
     private(set) var photosCount: PassthroughSubject<Int, Never> = .init()
     private(set) var initializationDone: PassthroughSubject<Void, Never> = .init()
+    private(set) var error: PassthroughSubject<Error, Never> = .init()
     private var album: Album?
     
     init(token: String) {
@@ -112,10 +114,10 @@ class PhotoModel: PhotoModable {
                 do {
                     self.album = try JSONDecoder().decode(VKResponse.self, from: data).album
                 } catch {
-                    print(error)
+                    self.error.send(TTError.invalidResponse)
                 }
             case .failure(let error):
-                print(error)
+                self.error.send(error)
             }
         }
     }

@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = .label
         coordinator = .init(window: window!)
         coordinator?.start()
+        URLCache().removeAllCachedResponses()
         window?.makeKeyAndVisible()
         return true
     }

@@ -10,6 +10,7 @@ import Combine
 
 class PhotoViewController: UIViewController {
     
+    private(set) var error: PassthroughSubject<Error, Never> = .init()
     private let scrollView: UIScrollView = .init()
     private let photoImageView: TTImageView = .init()
     private let collectionView = UICollectionView(
@@ -72,6 +73,8 @@ class PhotoViewController: UIViewController {
         scrollView.maximumZoomScale = 4
         scrollView.minimumZoomScale = 1
         scrollView.delegate = self
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
     }
     
     private func configurePhotoImageView() {
@@ -109,13 +112,18 @@ class PhotoViewController: UIViewController {
                 ? -Design.padding : -Design.bottomPadding
             )
         ])
+        
+        collectionView.showsHorizontalScrollIndicator = false
     }
     
     private func configureSuccsessImageView() {
-        checkmarkImageView.frame.size.width = view.frame.width
-        checkmarkImageView.frame.size.height = view.frame.width
-        checkmarkImageView.frame.origin.x = 0
-        checkmarkImageView.frame.origin.y = (view.frame.height - view.frame.width) / 2
+        checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            checkmarkImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            checkmarkImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            checkmarkImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            checkmarkImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
         
         checkmarkImageView.tintColor = .systemGreen
         checkmarkImageView.alpha = 0
@@ -128,7 +136,7 @@ class PhotoViewController: UIViewController {
             .sink { [unowned self] data in
                 guard let image = UIImage(data: data) else {
                     self.photoImageView.image = Images.placeholder
-                    self.photoImageView.stopLoadingAnimation()
+                    self.photoImageView.startLoadingAnimation()
                     return
                 }
                 self.photoImageView.stopLoadingAnimation()
@@ -146,10 +154,24 @@ class PhotoViewController: UIViewController {
         
         viewModel.cellCount
             .removeDuplicates()
-            .sink { [unowned self] _ in
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] count in
+                print(count)
+                self.collectionView.reloadData()
+            }
+            .store(in: &bindings)
+        
+        viewModel.error
+            .sink { [unowned self] error in
+                self.error.send(error)
+            }
+            .store(in: &bindings)
+        
+        viewModel.showAlert
+            .receive(on: DispatchQueue.main)
+            .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
+            .sink { [unowned self] error in
+                self.handleError(error)
             }
             .store(in: &bindings)
     }
@@ -246,5 +268,9 @@ extension PhotoViewController: UIScrollViewDelegate {
         } else {
             scrollView.contentInset = .zero
         }
+    }
+    
+    private func handleError(_ error: String) {
+        showAlert(title: "Error", message: error)
     }
 }

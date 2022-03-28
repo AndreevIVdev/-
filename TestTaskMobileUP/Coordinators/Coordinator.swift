@@ -37,7 +37,7 @@ final class Coordinator {
         authManager.error
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] error in
-                self.handleError(error: error)
+                self.handleError(error)
             }
             .store(in: &bindings)
         
@@ -55,7 +55,7 @@ final class Coordinator {
                     case .success(let token):
                         self.authManager.save(token)
                     case .failure(let error):
-                        self.handleError(error: error)
+                        self.handleError(error)
                     }
                 }
                 viewController.modalPresentationStyle = .popover
@@ -72,11 +72,19 @@ final class Coordinator {
     
     private func handleGalleryTap(index: Int) {
         guard let token = authManager.getToken() else { return }
+        let photoViewController = PhotoViewController(
+            token: token,
+            initialIndex: index
+        )
+        photoViewController.error
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] error in
+                self.handleError(error)
+            }
+            .store(in: &bindings)
+        
         navigationController.pushViewController(
-            PhotoViewController(
-                token: token,
-                initialIndex: index
-            ),
+            photoViewController,
             animated: true
         )
     }
@@ -99,7 +107,7 @@ final class Coordinator {
     }
 
     
-    private func handleError(error: Error) {
+    private func handleError(_ error: Error) {
         if let error = error as? TTError {
             switch error {
             case .accessDenied, .invalidToken:
