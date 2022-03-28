@@ -12,10 +12,8 @@ class WebViewController: UIViewController {
 
     private let webView: WKWebView = .init()
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
-    
     private let completed: (Result<String, Error>) -> Void?
     private let request: URLRequest
-    
     
     init(request: URLRequest, completed: @escaping (Result<String, Error>) -> Void) {
         self.completed = completed

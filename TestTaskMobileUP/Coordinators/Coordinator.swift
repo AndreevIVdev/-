@@ -55,7 +55,7 @@ final class Coordinator {
                     case .success(let token):
                         self.authManager.save(token)
                     case .failure(let error):
-                        print(error)
+                        self.handleError(error: error)
                     }
                 }
                 viewController.modalPresentationStyle = .popover

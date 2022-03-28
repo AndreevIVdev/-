@@ -10,12 +10,12 @@ import UIKit
 
 final class GalleryCollectionViewCell: UICollectionViewCell {
     
-    private let imageView: UIImageView = .init()
-    private var id: UUID!
+    private let imageView: TTImageView = .init()
+    private(set) var id: UUID = .init()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureCell()
     }
     
     required init?(coder: NSCoder) {
@@ -25,6 +25,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = Images.placeholder
+        imageView.startLoadingAnimation()
         id = UUID()
     }
     
@@ -46,14 +47,14 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
               let image = UIImage(data: data) else { return }
         DispatchQueue.main.async {
             self.imageView.image = image
+            self.imageView.stopLoadingAnimation()
         }
     }
     
-    private func configure() {
+    private func configureCell() {
         contentView.addSubViews(imageView)
         imageView.frame = contentView.bounds
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = Images.placeholder
     }
 }
