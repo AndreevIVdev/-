@@ -116,9 +116,7 @@ class GalleryViewController: UIViewController {
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: GalleryCollectionViewCell.description(),
                 for: indexPath) as! GalleryCollectionViewCell
-            DispatchQueue.global().async {
-                cell.set(by: photo)
-            }
+            cell.set(by: photo)
             return cell
         }
     }

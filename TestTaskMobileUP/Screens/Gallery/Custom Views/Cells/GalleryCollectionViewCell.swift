@@ -44,7 +44,9 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     func set(by data: Data?) {
         guard let data = data,
               let image = UIImage(data: data) else { return }
-        imageView.image = image
+        DispatchQueue.main.async {
+            self.imageView.image = image
+        }
     }
     
     private func configure() {

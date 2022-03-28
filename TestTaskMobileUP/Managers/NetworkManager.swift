@@ -20,35 +20,37 @@ final class NetworkingManager {
         from url: URL,
         completed: @escaping (Result<Data, Error>) -> Void
     ) {
-        if let nsdata = cache.object(forKey: url.description as NSString) {
-            completed(.success(Data(referencing: nsdata)))
-            return
+        DispatchQueue.global().async {
+            if let nsdata = self.cache.object(forKey: url.description as NSString) {
+                completed(.success(Data(referencing: nsdata)))
+                return
+            }
+            
+            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+                
+                guard let self = self else { return }
+                
+                guard error == nil else {
+                    completed(.failure(TTError.serverProblem))
+                    return
+                }
+                
+                guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                    completed(.failure(TTError.invalidResponse))
+                    return
+                }
+                
+                guard let data = data else {
+                    completed(.failure(TTError.noData))
+                    return
+                }
+                
+                self.cache.setObject(NSData(data: data), forKey: url.description as NSString)
+                
+                completed(.success(data))
+            }
+            .resume()
         }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            
-            guard let self = self else { return }
-            
-            guard error == nil else {
-                completed(.failure(TTError.serverProblem))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completed(.failure(TTError.invalidResponse))
-                return
-            }
-            
-            guard let data = data else {
-                completed(.failure(TTError.noData))
-                return
-            }
-            
-            self.cache.setObject(NSData(data: data), forKey: url.description as NSString)
-            
-            completed(.success(data))
-        }
-        .resume()
     }
     
     public func fetchDataAvoidingCache(
@@ -80,11 +82,25 @@ final class NetworkingManager {
         .resume()
     }
     
+    public func fetchDataAvoidingCacheWithOutErrorHandling(
+        from url: URL,
+        completed: @escaping (Data?) -> Void
+    ) {
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            completed(data)
+            
+            guard let self = self,
+                  let data = data else { return }
+            self.cache.setObject(NSData(data: data), forKey: url.description as NSString)
+        }
+        .resume()
+    }
+    
     public func fetchDataWithOutErrorHandling(
         from url: URL,
         completed: @escaping (Data?) -> Void
     ) {
-        if let nsdata = cache.object(forKey: url.description as NSString) {
+        if let nsdata = self.cache.object(forKey: url.description as NSString) {
             completed(Data(referencing: nsdata))
             return
         }
@@ -94,7 +110,6 @@ final class NetworkingManager {
             
             guard let self = self,
                   let data = data else { return }
-            
             self.cache.setObject(NSData(data: data), forKey: url.description as NSString)
         }
         .resume()

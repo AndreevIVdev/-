@@ -123,7 +123,7 @@ class PhotoViewController: UIViewController {
             }
             .store(in: &bindings)
         
-        viewModel.dataSource
+        viewModel.cellCount
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
@@ -173,15 +173,19 @@ class PhotoViewController: UIViewController {
 
 extension PhotoViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.dataSource.value.count
+        viewModel.getCellCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.description(),
             for: indexPath) as! GalleryCollectionViewCell
-        
-        cell.set(by: viewModel.dataSource.value[indexPath.row])
+        viewModel.getCell(for: indexPath.row) { data, index in
+            guard indexPath.row == index else {
+                return
+            }
+            cell.set(by: data)
+        }
         return cell
     }
 }
