@@ -25,10 +25,12 @@ final class NetworkingManager {
             return
         }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            
+            guard let self = self else { return }
             
             guard error == nil else {
-                completed(.failure(TTError.stockError))
+                completed(.failure(TTError.serverProblem))
                 return
             }
             
@@ -53,10 +55,11 @@ final class NetworkingManager {
         from url: URL,
         completed: @escaping (Result<Data, Error>) -> Void
     ) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self else { return }
             
             guard error == nil else {
-                completed(.failure(TTError.stockError))
+                completed(.failure(TTError.serverProblem))
                 return
             }
             
@@ -81,6 +84,19 @@ final class NetworkingManager {
         from url: URL,
         completed: @escaping (Data?) -> Void
     ) {
-        completed(try? Data(contentsOf: url))
+        if let nsdata = cache.object(forKey: url.description as NSString) {
+            completed(Data(referencing: nsdata))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            completed(data)
+            
+            guard let self = self,
+                  let data = data else { return }
+            
+            self.cache.setObject(NSData(data: data), forKey: url.description as NSString)
+        }
+        .resume()
     }
 }
