@@ -22,4 +22,31 @@ enum UIHelper {
 
         return flowLayout
     }
+    
+    static func createHorizontalFlowLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalHeight(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalHeight(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: groupSize, subitem: item, count: 1
+        )
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 2
+        
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.scrollDirection = .horizontal
+        
+        let layout = UICollectionViewCompositionalLayout(
+            section: section, configuration: config)
+        return layout
+    }
 }

@@ -1,13 +1,13 @@
 //
-//  Model.swift
+//  VKResponses.swift
 //  TestTaskMobileUP
 //
-//  Created by Илья Андреев on 26.03.2022.
+//  Created by Илья Андреев on 27.03.2022.
 //
 
 import Foundation
 
-// MARK: - Welcome
+// MARK: - VKResponse
 struct VKResponse: Codable {
     let album: Album
     enum CodingKeys: String, CodingKey {
@@ -52,20 +52,20 @@ struct Photo: Codable, Hashable {
 struct Size: Codable, Hashable {
     let height: Int
     let url: String
-    let type: TypeEnum
     let width: Int
 }
 
+// MARK: - VKValidationResponse
+struct VKValidationResponse: Codable {
+    let response: Response
+}
 
-enum TypeEnum: String, Codable {
-    case m
-    case o
-    case p
-    case q
-    case r
-    case s
-    case w
-    case x
-    case y
-    case z
+// MARK: - Response
+struct Response: Codable {
+    let date, expire, success, userID: Int
+
+    enum CodingKeys: String, CodingKey {
+        case date, expire, success
+        case userID = "user_id"
+    }
 }
