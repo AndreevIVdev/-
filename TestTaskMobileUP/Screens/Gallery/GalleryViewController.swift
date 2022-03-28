@@ -18,12 +18,12 @@ class GalleryViewController: UIViewController {
     
     private let token: String
     private let signOut: (() -> Void)
-    private let choosen: (Int, [Photo]) -> Void
+    private let choosen: (Int) -> Void
     
     init(
         token: String,
         signOut: @escaping () -> Void,
-        choosen: @escaping (Int, [Photo]) -> Void
+        choosen: @escaping (Int) -> Void
     ) {
         self.token = token
         self.signOut = signOut
@@ -40,6 +40,7 @@ class GalleryViewController: UIViewController {
         configureCollectionView()
         configureViewController()
         configureDataSource()
+        configureNavigationItem()
         DispatchQueue.global().async {
             self.fetchFotos(token: self.token)
         }
@@ -49,15 +50,6 @@ class GalleryViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationItem.backButtonTitle = ""
-        
-        let signOutButton = UIBarButtonItem()
-        signOutButton.title = "Выход"
-        signOutButton.tintColor = .label
-        signOutButton.action = #selector(signOutButtonTapped)
-        signOutButton.target = self
-
-        navigationItem.rightBarButtonItem = signOutButton
     }
     
     @objc private func signOutButtonTapped() {
@@ -82,6 +74,18 @@ class GalleryViewController: UIViewController {
             forCellWithReuseIdentifier: GalleryCollectionViewCell.description()
         )
         collectionView.delegate = self
+    }
+    
+    private func configureNavigationItem() {
+        navigationItem.backButtonTitle = ""
+        
+        let signOutButton = UIBarButtonItem()
+        signOutButton.title = "Выход"
+        signOutButton.tintColor = .label
+        signOutButton.action = #selector(signOutButtonTapped)
+        signOutButton.target = self
+
+        navigationItem.rightBarButtonItem = signOutButton
     }
     
     private func fetchFotos(token: String) {
@@ -131,6 +135,6 @@ class GalleryViewController: UIViewController {
     
 extension GalleryViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        choosen(indexPath.row, photos)
+        choosen(indexPath.row)
     }
 }

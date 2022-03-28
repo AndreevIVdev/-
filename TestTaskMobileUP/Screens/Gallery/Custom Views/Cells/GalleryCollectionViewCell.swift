@@ -41,6 +41,12 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    func set(by data: Data?) {
+        guard let data = data,
+              let image = UIImage(data: data) else { return }
+        imageView.image = image
+    }
+    
     private func configure() {
         contentView.addSubViews(imageView)
         imageView.frame = contentView.bounds
