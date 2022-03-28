@@ -119,10 +119,10 @@ class PhotoViewController: UIViewController {
     private func configureSuccsessImageView() {
         checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            checkmarkImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            checkmarkImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            checkmarkImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            checkmarkImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            checkmarkImageView.widthAnchor.constraint(equalToConstant: 100),
+            checkmarkImageView.heightAnchor.constraint(equalToConstant: 100),
+            checkmarkImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            checkmarkImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
         
         checkmarkImageView.tintColor = .systemGreen
@@ -131,16 +131,17 @@ class PhotoViewController: UIViewController {
     
     private func configureBindings() {
         viewModel.photo
+            .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] data in
                 guard let image = UIImage(data: data) else {
-                    self.photoImageView.image = Images.placeholder
+                    self.photoImageView.setImage(Images.placeholder)
                     self.photoImageView.startLoadingAnimation()
                     return
                 }
                 self.photoImageView.stopLoadingAnimation()
-                self.photoImageView.image = image
+                self.photoImageView.setImage(image)
             }
             .store(in: &bindings)
         

@@ -30,6 +30,16 @@ class TTImageView: UIImageView {
         activityIndicator.stopAnimating()
     }
     
+    func setImage(_ image: UIImage) {
+        UIView.transition(
+            with: self,
+            duration: 0.75,
+            options: .transitionCrossDissolve,
+            animations: { self.image = image },
+            completion: nil
+        )
+    }
+    
     private func configureActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
