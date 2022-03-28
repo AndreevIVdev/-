@@ -10,7 +10,8 @@ import Combine
 
 class PhotoViewController: UIViewController {
     
-    private let photoImageView: UIImageView = .init()
+    private let scrollView: UIScrollView = .init()
+    private let photoImageView: TTImageView = .init()
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UIHelper.createHorizontalFlowLayout()
@@ -21,12 +22,12 @@ class PhotoViewController: UIViewController {
         )
     )
     
-    private let viewModel: PhotoViewModel
+    private let viewModel: PhotoViewModable
     
     private var bindings: Set<AnyCancellable> = .init()
     
     init(token: String, initialIndex: Int) {
-        viewModel = .init(
+        viewModel = PhotoViewModel.init(
             token: token,
             currentindex: initialIndex
         )
@@ -41,10 +42,51 @@ class PhotoViewController: UIViewController {
         super.viewDidLoad()
         
         configureViewController()
+        configureScrollView()
         configureCollectionView()
         configurePhotoImageView()
         configureSuccsessImageView()
         configureBindings()
+    }
+    
+    private func configureViewController() {
+        view.backgroundColor = .systemBackground
+        view.addSubViews(scrollView, checkmarkImageView, collectionView)
+        navigationItem.rightBarButtonItem = .init(
+            image: UIImage(systemName: "square.and.arrow.up"),
+            style: .plain,
+            target: self,
+            action: #selector(share)
+        )
+    }
+    
+    private func configureScrollView() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        scrollView.addSubViews(photoImageView)
+        scrollView.maximumZoomScale = 4
+        scrollView.minimumZoomScale = 1
+        scrollView.delegate = self
+    }
+    
+    private func configurePhotoImageView() {
+        photoImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            photoImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            photoImageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+            photoImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            photoImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            photoImageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            photoImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+        ])
+        
+        photoImageView.clipsToBounds = true
+        photoImageView.contentMode = .scaleAspectFit
     }
     
     private func configureCollectionView() {
@@ -69,29 +111,6 @@ class PhotoViewController: UIViewController {
         ])
     }
     
-    private func configureViewController() {
-        view.backgroundColor = .systemBackground
-        view.addSubViews(photoImageView, checkmarkImageView, collectionView)
-        navigationItem.rightBarButtonItem = .init(
-            image: UIImage(systemName: "square.and.arrow.up"),
-            style: .plain,
-            target: self,
-            action: #selector(share)
-        )
-    }
-    
-    private func configurePhotoImageView() {
-        photoImageView.frame.size.width = view.frame.width
-        photoImageView.frame.size.height = view.frame.width
-        photoImageView.frame.origin.x = 0
-        photoImageView.frame.origin.y = (view.frame.height - view.frame.width) / 2
-        
-        photoImageView.image = Images.placeholder
-        photoImageView.clipsToBounds = true
-        photoImageView.contentMode = .scaleAspectFill
-        photoImageView.enableZooming()
-    }
-    
     private func configureSuccsessImageView() {
         checkmarkImageView.frame.size.width = view.frame.width
         checkmarkImageView.frame.size.height = view.frame.width
@@ -108,9 +127,11 @@ class PhotoViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] data in
                 guard let image = UIImage(data: data) else {
-                          self.photoImageView.image = Images.placeholder
-                          return
-                      }
+                    self.photoImageView.image = Images.placeholder
+                    self.photoImageView.stopLoadingAnimation()
+                    return
+                }
+                self.photoImageView.stopLoadingAnimation()
                 self.photoImageView.image = image
             }
             .store(in: &bindings)
@@ -125,9 +146,10 @@ class PhotoViewController: UIViewController {
         
         viewModel.cellCount
             .removeDuplicates()
-            .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
-                self.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
             .store(in: &bindings)
     }
@@ -180,11 +202,10 @@ extension PhotoViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.description(),
             for: indexPath) as! GalleryCollectionViewCell
-        viewModel.getCell(for: indexPath.row) { data, index in
-            guard indexPath.row == index else {
-                return
+        viewModel.getCell(for: indexPath.row, with: cell.id) { data, id in
+            if cell.id == id {
+                cell.set(by: data)
             }
-            cell.set(by: data)
         }
         return cell
     }
@@ -193,5 +214,37 @@ extension PhotoViewController: UICollectionViewDataSource {
 extension PhotoViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.setNewIndex(indexPath.row)
+    }
+}
+
+extension PhotoViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        photoImageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        if scrollView.zoomScale > 1 {
+            if let image = photoImageView.image {
+                let ratioW = photoImageView.frame.width / image.size.width
+                let ratioH = photoImageView.frame.height / image.size.height
+                
+                let ratio = ratioW < ratioH ? ratioW : ratioH
+                let newWidth = image.size.width * ratio
+                let newHeight = image.size.height * ratio
+                let conditionLeft = newWidth * scrollView.zoomScale > photoImageView.frame.width
+                let left = 0.5 *
+                (conditionLeft ? newWidth - photoImageView.frame.width
+                 : (scrollView.frame.width - scrollView.contentSize.width))
+                let conditioTop = newHeight * scrollView.zoomScale > photoImageView.frame.height
+                
+                let top = 0.5 *
+                (conditioTop ? newHeight - photoImageView.frame.height
+                 : (scrollView.frame.height - scrollView.contentSize.height))
+                
+                scrollView.contentInset = UIEdgeInsets(top: top, left: left, bottom: top, right: left)
+            }
+        } else {
+            scrollView.contentInset = .zero
+        }
     }
 }

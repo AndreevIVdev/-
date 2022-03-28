@@ -7,60 +7,97 @@
 
 import Foundation
 import Combine
-import UIKit
 
-class PhotoModel {
+protocol PhotoModable: AnyObject {
+    var photosCount: PassthroughSubject<Int, Never> { get }
+    var initializationDone: PassthroughSubject<Void, Never> { get }
+    func getPhoto(with size: PhotoSize, for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void)
+    func getTitle(for index: Int) -> Int?
+    func initialize()
+}
+
+enum PhotoSize {
+    case small
+    case medium
+    case large
+}
+
+class PhotoModel: PhotoModable {
     private let token: String
-    private var dataSource: [Data?] = []
+    private var smallPictures: [Data?] = []
+    private var mediumPictures: [Data?] = []
+    private var bigPictures: [Data?] = []
     private var bindings: Set<AnyCancellable> = .init()
     private(set) var photosCount: PassthroughSubject<Int, Never> = .init()
     private(set) var initializationDone: PassthroughSubject<Void, Never> = .init()
-    private var album: CurrentValueSubject<Album?, Never> = .init(nil)
+    private var album: Album?
     
     init(token: String) {
         self.token = token
-        bind()
+    }
+    
+    func initialize() {
         loadAlbum { [weak self] in
-            guard let self = self else { return }
-            self.loadPhotos()
+            guard let self = self,
+                  let album = self.album else { return }
+            self.smallPictures = .init(repeating: nil, count: album.count)
+            self.mediumPictures = .init(repeating: nil, count: album.count)
+            self.bigPictures = .init(repeating: nil, count: album.count)
+            self.photosCount.send(album.count)
+            self.initializationDone.send()
         }
     }
     
-    func getPhoto(for index: Int, completion: @escaping (Data?, Int) -> Void) {
-        guard index < dataSource.count,
-              let album = album.value else {
+    func getPhoto(with size: PhotoSize, for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void) {
+        guard let album = album,
+              index < album.count else {
+            completion(nil, id)
             return
+        }
+        
+        var dataSource: [Data?] = []
+        switch size {
+        case .small:
+            dataSource = smallPictures
+        case .medium:
+            dataSource = mediumPictures
+        case .large:
+            dataSource = bigPictures
         }
         
         if let data = dataSource[index] {
-            completion(data, index)
+            completion(data, id)
             return
         }
         
-        loadPhoto(index: index, from: album) { [weak self] data in
-            guard let self = self else {
+        loadPhoto(with: size, index: index) { [weak self] data in
+            guard let self = self,
+                  let data = data else {
+                completion(nil, id)
                 return
             }
-            self.dataSource[index] = data
-            completion(data, index)
+            self.savePhoto(data, with: size, and: index)
+            completion(data, id)
+        }
+    }
+    
+    private func savePhoto(_ photo: Data, with size: PhotoSize, and index: Int) {
+        switch size {
+            
+        case .small:
+            smallPictures[index] = photo
+        case .medium:
+            mediumPictures[index] = photo
+        case .large:
+            bigPictures[index] = photo
         }
     }
     
     func getTitle(for index: Int) -> Int? {
-        guard let album = album.value,
+        guard let album = album,
               index < album.count  else { return nil }
         
         return album.photos[index].date
-    }
-    
-    private func bind() {
-        album
-            .compactMap { $0 }
-            .sink { [unowned self] album in
-                self.dataSource = .init(repeating: nil, count: album.count)
-                self.photosCount.send(album.count)
-            }
-            .store(in: &bindings)
     }
     
     func loadAlbum(completed: @escaping () -> Void) {
@@ -73,7 +110,7 @@ class PhotoModel {
             switch result {
             case .success(let data):
                 do {
-                    self.album.send(try JSONDecoder().decode(VKResponse.self, from: data).album)
+                    self.album = try JSONDecoder().decode(VKResponse.self, from: data).album
                 } catch {
                     print(error)
                 }
@@ -83,30 +120,29 @@ class PhotoModel {
         }
     }
     
-    private func loadPhotos() {
-        guard let album = album.value else { return }
-        let group = DispatchGroup()
-        for index in dataSource.indices {
-            DispatchQueue.global().async {
-                group.enter()
-                self.loadPhoto(index: index, from: album) { [weak self] data in
-                    group.leave()
-                    guard let self = self else { return }
-                    self.dataSource[index] = data
-                }
-            }
-        }
-        
-        group.notify(queue: .global()) {
-            self.initializationDone.send()
-        }
-    }
-    
-    private func loadPhoto(index: Int, from album: Album, completion: @escaping (Data?) -> Void) {
-        guard let url = URL(string: album.photos[index].sizes[4].url) else {
+    private func loadPhoto(with size: PhotoSize, index: Int, completion: @escaping (Data?) -> Void) {
+        guard let album = album else {
             completion(nil)
             return
         }
+        var photoSize: Size?
+        let screenWidth = Int(ScreenSize.width)
+        switch size {
+        case .small:
+            photoSize = album.photos[index].sizes.min(by: { $0.width < $1.width })
+        case .medium:
+            photoSize = album.photos[index].sizes.min {
+                abs($0.width - screenWidth / 2) < abs($1.width - screenWidth / 2)
+            }
+        case .large:
+            photoSize = album.photos[index].sizes.min(by: { abs($0.width - screenWidth) < abs($1.width - screenWidth) })
+        }
+        
+        guard let url = URL(string: photoSize!.url) else {
+            completion(nil)
+            return
+        }
+        
         NetworkingManager.shared.fetchDataWithOutErrorHandling(from: url) { data in
             completion(data)
         }

@@ -8,28 +8,40 @@
 import Foundation
 import Combine
 
-class PhotoViewModel {
+protocol PhotoViewModable: AnyObject {
+    var title: CurrentValueSubject<String, Never> { get }
+    var photo: CurrentValueSubject<Data, Never> { get }
+    var currentIndex: CurrentValueSubject<Int, Never> { get }
+    var cellCount: CurrentValueSubject<Int, Never> { get }
+    func getCellCount() -> Int
+    func getCell(for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void)
+    func setNewIndex(_ newIndex: Int)
+}
+
+class PhotoViewModel: PhotoViewModable {
     
     private(set) var title: CurrentValueSubject<String, Never> = .init("")
     private(set) var photo: CurrentValueSubject<Data, Never> = .init(Images.placeholder.pngData()!)
+    private var photoID: UUID = .init()
     private(set) var currentIndex: CurrentValueSubject<Int, Never> = .init(0)
     private(set) var cellCount: CurrentValueSubject<Int, Never> = .init(0)
     
     private var bindings: Set<AnyCancellable> = .init()
-    private let model: PhotoModel
-
+    private let model: PhotoModable
+    
     init(token: String, currentindex: Int) {
-        model = .init(token: token)
-        self.currentIndex.send(currentindex)
+        model = PhotoModel.init(token: token)
         bind()
+        model.initialize()
+        self.currentIndex.send(currentindex)
     }
     
     func setNewIndex(_ newIndex: Int) {
         currentIndex.send(newIndex)
     }
     
-    func getCell(for index: Int, completion: @escaping (Data?, Int) -> Void) {
-        model.getPhoto(for: index, completion: completion)
+    func getCell(for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void) {
+        model.getPhoto(with: .small, for: index, with: id, completion: completion)
     }
     
     func getCellCount() -> Int {
@@ -39,7 +51,7 @@ class PhotoViewModel {
     private func bind() {
         currentIndex
             .sink { [unowned self] _ in
-                updateTitle()
+                self.updateTitle()
             }
             .store(in: &bindings)
         
@@ -50,12 +62,14 @@ class PhotoViewModel {
             .store(in: &bindings)
         
         model.photosCount
+            .receive(on: DispatchQueue.main)
             .sink { [unowned self] count in
-                self.cellCount.value = count
+                self.cellCount.send(count)
             }
             .store(in: &bindings)
         
         model.initializationDone
+            .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 self.updateTitle()
                 self.updatePhoto()
@@ -68,9 +82,15 @@ class PhotoViewModel {
     }
     
     private func updatePhoto() {
-        model.getPhoto(for: currentIndex.value) { [weak self] data, _ in
-            guard let self = self else { return }
-            self.photo.send(data ?? Images.placeholder.pngData()!)
+        photoID = UUID()
+        self.photo.send(Images.placeholder.pngData()!)
+        model.getPhoto(with: .large, for: currentIndex.value, with: photoID) { [weak self] data, id in
+            guard let self = self,
+                  let data = data,
+                  self.photoID == id else {
+                      return
+                  }
+            self.photo.send(data)
         }
     }
 }
