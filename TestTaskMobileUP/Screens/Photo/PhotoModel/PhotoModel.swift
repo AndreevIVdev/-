@@ -9,29 +9,46 @@ import Foundation
 import Combine
 
 // MARK: - Protocol PhotoModable
+/// Protocol describing necessary functions of Photo Model instance
 protocol PhotoModable: AnyObject {
+    /// Publisher that sends photo count in album
     var photosCount: PassthroughSubject<Int, Never> { get }
+    /// Publisher that sends initialization completion notification
     var initializationDone: PassthroughSubject<Void, Never> { get }
+    /// Publisher that sends occurring error
     var error: PassthroughSubject<Error, Never> { get }
+    /// Returns data for photo at given position
     func getPhoto(size: PhotoSize, for index: Int, and id: UUID, completion: @escaping (Data?, UUID) -> Void)
+    /// Returns title for photo at given position
     func getTitle(for index: Int) -> Int?
+    /// Starts model initialization
     func initialize()
 }
 
 // MARK: - Class PhotoModel 😀
+/// Photo gallery model
 class PhotoModel: PhotoModable {
     
     // MARK: - Publishers
+    /// Publisher that sends photo count in album
     private(set) var photosCount: PassthroughSubject<Int, Never> = .init()
+    /// Publisher that sends initialization completion notification
     private(set) var initializationDone: PassthroughSubject<Void, Never> = .init()
+    /// Publisher that sends occurring error
     private(set) var error: PassthroughSubject<Error, Never> = .init()
     
     // MARK: - Private Properties
+    /// Access token for current session
     private let token: String
+    /// Datasource for photos with small resolution
     private var smallPictures: [Data?] = []
+    /// Datasource for photos with normal resolution
     private var mediumPictures: [Data?] = []
+    /// Datasource for hight resolution photos
     private var bigPictures: [Data?] = []
+    /// Subscriptions storage
     private var bindings: Set<AnyCancellable> = .init()
+    /// Info source for photos
     private var album: Album?
     
     // MARK: - Initializers
@@ -46,6 +63,7 @@ class PhotoModel: PhotoModable {
     }
     
     // MARK: - Public Methods
+    /// Starts model initialization
     func initialize() {
         loadAlbum { [weak self] in
             guard let self = self,
@@ -58,6 +76,7 @@ class PhotoModel: PhotoModable {
         }
     }
     
+    /// Returns data for photo at given position
     func getPhoto(size: PhotoSize, for index: Int, and id: UUID, completion: @escaping (Data?, UUID) -> Void) {
         guard let album = album,
               index < album.count else {
@@ -91,6 +110,7 @@ class PhotoModel: PhotoModable {
         }
     }
     
+    /// Returns title for photo at given position
     func getTitle(for index: Int) -> Int? {
         guard let album = album,
               index < album.count  else { return nil }
@@ -99,6 +119,8 @@ class PhotoModel: PhotoModable {
     }
     
     // MARK: - Private Methods
+    /// Loads info source to get photos
+    /// - Parameter completed: calles when album is fully loaded
     private func loadAlbum(completed: @escaping () -> Void) {
         guard let url = VKClient.photosURL(with: self.token) else { return }
         NetworkManager.shared.fetchData(from: url) { [weak self] result in
@@ -119,6 +141,11 @@ class PhotoModel: PhotoModable {
         }
     }
     
+    /// Loads photo from internet
+    /// - Parameters:
+    ///   - size: Needed resolution size
+    ///   - index: Position of photo
+    ///   - completion: result in completion block
     private func loadPhoto(with size: PhotoSize, index: Int, completion: @escaping (Data?) -> Void) {
         guard let album = album else {
             completion(nil)
@@ -147,6 +174,11 @@ class PhotoModel: PhotoModable {
         }
     }
     
+    /// Saves photo locally
+    /// - Parameters:
+    ///   - photo: Photo to be saved
+    ///   - size: Photos resolution template
+    ///   - index: Photo position
     private func savePhoto(_ photo: Data, with size: PhotoSize, and index: Int) {
         switch size {
             
@@ -161,6 +193,7 @@ class PhotoModel: PhotoModable {
 }
 
 // MARK: - Enum PhotoSize
+/// Templates for photo resolution
 enum PhotoSize {
     case small
     case medium

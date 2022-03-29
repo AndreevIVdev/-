@@ -9,20 +9,28 @@ import UIKit
 import Combine
 
 // MARK: - Class PhotoViewController
+/// Large photo screen
 class PhotoViewController: UIViewController {
     
     // MARK: - Publishers
+    /// Publisher that throws possible errors
     private(set) var error: PassthroughSubject<Error, Never> = .init()
     
     // MARK: - Private Properties
+    /// Main datasource
     private let viewModel: PhotoViewModable
+    /// Subscriptions storage
     private var bindings: Set<AnyCancellable> = .init()
+    /// Lets zoom and move photo on the screen
     private let scrollView: UIScrollView = .init()
+    /// Large photo container
     private let photoImageView: TTImageView = .init()
+    /// Collection view for photo showing
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UIHelper.createHorizontalFlowLayout()
     )
+    /// Shows success of the action
     private let checkmarkImageView: UIImageView = .init(image: Images.success)
     
     // MARK: - Initializers
@@ -57,6 +65,7 @@ class PhotoViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    /// Primary screen configuration
     private func configureViewController() {
         view.backgroundColor = .systemBackground
         view.addSubViews(scrollView, checkmarkImageView, collectionView)
@@ -67,7 +76,7 @@ class PhotoViewController: UIViewController {
             action: #selector(share)
         )
     }
-    
+    /// Primary zooming view configuration
     private func configureScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -83,7 +92,7 @@ class PhotoViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
     }
-    
+    /// Primary collection view configuration
     private func configureCollectionView() {
         collectionView.backgroundColor = .systemBackground
         collectionView.register(
@@ -106,7 +115,7 @@ class PhotoViewController: UIViewController {
         
         collectionView.showsHorizontalScrollIndicator = false
     }
-    
+    /// Primary photo container configuration
     private func configurePhotoImageView() {
         photoImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -121,7 +130,7 @@ class PhotoViewController: UIViewController {
         photoImageView.clipsToBounds = true
         photoImageView.contentMode = .scaleAspectFit
     }
-    
+    /// Primary success checkmark configuration
     private func configureSuccsessImageView() {
         checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -134,7 +143,7 @@ class PhotoViewController: UIViewController {
         checkmarkImageView.tintColor = .systemGreen
         checkmarkImageView.alpha = 0
     }
-    
+    /// Initializes reactive connections
     private func setupBindingsViewModelToView() {
         viewModel.photo
             .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
@@ -167,7 +176,7 @@ class PhotoViewController: UIViewController {
             }
             .store(in: &bindings)
     }
-    
+    /// Handles the attempt to share large photo
     @objc private func share() {
         let shareController: UIActivityViewController = .init(
             activityItems: [photoImageView.image ?? Images.placeholder],
@@ -209,10 +218,21 @@ class PhotoViewController: UIViewController {
 
 // MARK: - Extension UICollectionViewDataSource
 extension PhotoViewController: UICollectionViewDataSource {
+    
+    /// Returns number of cells in current section of collection view
+    /// - Parameters:
+    ///   - collectionView: current collection view
+    ///   - section: current section
+    /// - Returns: count of cells
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.getCellCount()
     }
     
+    /// Configurates propper cell for given position
+    /// - Parameters:
+    ///   - collectionView: current collection view
+    ///   - indexPath: current position
+    /// - Returns: properly configurated cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.description(),
@@ -228,6 +248,10 @@ extension PhotoViewController: UICollectionViewDataSource {
 
 // MARK: - Extension UICollectionViewDelegate
 extension PhotoViewController: UICollectionViewDelegate {
+    /// Handles tap on the element of collection view
+    /// - Parameters:
+    ///   - collectionView: current collection view
+    ///   - indexPath: tap position
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.setNewIndex(indexPath.row)
     }
@@ -235,10 +259,15 @@ extension PhotoViewController: UICollectionViewDelegate {
 
 // MARK: - Extension UIScrollViewDelegate
 extension PhotoViewController: UIScrollViewDelegate {
+    /// Selects view for zooming
+    /// - Parameter scrollView: current scroll view
+    /// - Returns: view for zooming
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         photoImageView
     }
     
+    /// Handles and configures zoom options
+    /// - Parameter scrollView: current scroll view
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         if scrollView.zoomScale > 1 {
             if let image = photoImageView.image {

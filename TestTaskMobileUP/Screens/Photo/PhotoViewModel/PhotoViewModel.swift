@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 // MARK: - Protocol PhotoViewModable
+/// Protocol describing necessary functions of Large Photo View Model instance
 protocol PhotoViewModable: AnyObject {
     var title: CurrentValueSubject<String, Never> { get }
     var photo: CurrentValueSubject<Data?, Never> { get }
@@ -32,6 +33,7 @@ class PhotoViewModel: PhotoViewModable {
     
     // MARK: - Private Properties
     private let model: PhotoModable
+    /// Subscriptions storage
     private var bindings: Set<AnyCancellable> = .init()
     private var photoID: UUID = .init()
     

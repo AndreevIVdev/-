@@ -19,7 +19,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 class AuthViewController: UIViewController {
     
     // MARK: - Public Properties
-    ///  Event external handling delegate
+    ///  Delegate for external handling
     weak var delegate: AuthViewControllerDelegate?
     
     // MARK: - Private Properties

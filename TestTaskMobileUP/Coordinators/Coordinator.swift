@@ -47,7 +47,7 @@ final class Coordinator: NSObject {
     }
     
     // MARK: - Private Methods
-    /// Initialize reactive connections
+    /// Initializes reactive connections
     private func setupBindingsSelfToSelf() {
         authManager.$state
             .removeDuplicates()
