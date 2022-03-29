@@ -7,21 +7,31 @@
 
 import UIKit
 
+// MARK: - Enum Constants
 enum Constants {
+    
     static let applicationID: String = "8115098"
 }
 
+// MARK: - Enum Design
 enum Design {
+    
     static let padding: CGFloat = 24
     static let bottomPadding: CGFloat = 50
     static let buttonHeight: CGFloat = 55
     static let cornerRadius: CGFloat = 5
 }
 
+// MARK: - Enum Images
 enum Images {
+    
     static let placeholder: UIImage = .init(named: "placeholder")!
+    static let xmark: UIImage = .init(systemName: "xmark")!
+    static let share: UIImage = .init(systemName: "square.and.arrow.up")!
+    static let success: UIImage = .init(systemName: "checkmark.circle.fill")!
 }
 
+// MARK: - Enum ScreenSize
 enum ScreenSize {
     
     static let width = UIScreen.main.bounds.size.width
@@ -30,6 +40,7 @@ enum ScreenSize {
     static let minLength = min(height, width)
 }
 
+// MARK: - Enum DeviceTypes
 enum DeviceTypes {
     
     static let idiom = UIDevice.current.userInterfaceIdiom

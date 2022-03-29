@@ -7,16 +7,28 @@
 
 import Foundation
 
-
-final class NetworkingManager {
+// MARK: - Class NetworkManager
+final class NetworkManager {
     
-    private init() {}
+    // MARK: - Public Static Properties
+    static let shared = NetworkManager()
     
-    static let shared = NetworkingManager()
+    // MARK: - Private Properties
+    private let cache: NSCache<NSString, NSData> = .init()
+    private var loadingResponses: [URL: [(Data?) -> Void]] = .init()
     
-    let cache: NSCache<NSString, NSData> = .init()
+    // MARK: - Initializers
+    private init() {
+        print("\(String(describing: type(of: self))) INIT")
+    }
     
-    public func fetchData(
+    // MARK: - Deinitializers
+    deinit {
+        print("\(String(describing: type(of: self))) DEINIT")
+    }
+    
+    // MARK: - Public Methods
+    func fetchData(
         from url: URL,
         completed: @escaping (Result<Data, Error>) -> Void
     ) {
@@ -53,7 +65,7 @@ final class NetworkingManager {
     }
     
     
-    public func fetchDataAvoidingCache(
+    func fetchDataAvoidingCache(
         from url: URL,
         completed: @escaping (Result<Data, Error>) -> Void
     ) {
@@ -82,7 +94,7 @@ final class NetworkingManager {
         .resume()
     }
     
-    public func fetchDataWithOutErrorHandling(
+    func fetchDataWithOutErrorHandling(
         from url: URL,
         completed: @escaping (Data?) -> Void
     ) {
@@ -91,11 +103,18 @@ final class NetworkingManager {
             return
         }
         
+        if loadingResponses[url] != nil {
+            loadingResponses[url]?.append(completed)
+            return
+        } else {
+            loadingResponses[url] = [completed]
+        }
+        
         URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            completed(data)
-            
-            guard let self = self,
-                  let data = data else { return }
+            guard let self = self else { return }
+            self.loadingResponses[url]?.forEach { $0(data) }
+            self.loadingResponses.removeValue(forKey: url)
+            guard let data = data else { return }
             self.cache.setObject(NSData(data: data), forKey: url.description as NSString)
         }
         .resume()

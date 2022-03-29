@@ -8,37 +8,43 @@
 import UIKit
 import Combine
 
+// MARK: - Class PhotoViewController
 class PhotoViewController: UIViewController {
     
+    // MARK: - Publishers
     private(set) var error: PassthroughSubject<Error, Never> = .init()
+    
+    // MARK: - Private Properties
+    private let viewModel: PhotoViewModable
+    private var bindings: Set<AnyCancellable> = .init()
     private let scrollView: UIScrollView = .init()
     private let photoImageView: TTImageView = .init()
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UIHelper.createHorizontalFlowLayout()
     )
-    private let checkmarkImageView: UIImageView = .init(
-        image: .init(
-            systemName: "checkmark.circle.fill"
-        )
-    )
+    private let checkmarkImageView: UIImageView = .init(image: Images.success)
     
-    private let viewModel: PhotoViewModable
-    
-    private var bindings: Set<AnyCancellable> = .init()
-    
+    // MARK: - Initializers
     init(token: String, initialIndex: Int) {
         viewModel = PhotoViewModel.init(
             token: token,
             currentindex: initialIndex
         )
         super.init(nibName: nil, bundle: nil)
+        print("\(String(describing: type(of: self))) INIT")
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Deinitializers
+    deinit {
+        print("\(String(describing: type(of: self))) DEINIT")
+    }
+    
+    // MARK: - Override Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,14 +53,15 @@ class PhotoViewController: UIViewController {
         configureCollectionView()
         configurePhotoImageView()
         configureSuccsessImageView()
-        configureBindings()
+        setupBindingsViewModelToView()
     }
     
+    // MARK: - Private Methods
     private func configureViewController() {
         view.backgroundColor = .systemBackground
         view.addSubViews(scrollView, checkmarkImageView, collectionView)
         navigationItem.rightBarButtonItem = .init(
-            image: UIImage(systemName: "square.and.arrow.up"),
+            image: Images.share,
             style: .plain,
             target: self,
             action: #selector(share)
@@ -77,23 +84,7 @@ class PhotoViewController: UIViewController {
         scrollView.showsHorizontalScrollIndicator = false
     }
     
-    private func configurePhotoImageView() {
-        photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            photoImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            photoImageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-            photoImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            photoImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            photoImageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            photoImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
-        ])
-        
-        photoImageView.clipsToBounds = true
-        photoImageView.contentMode = .scaleAspectFit
-    }
-    
     private func configureCollectionView() {
-        
         collectionView.backgroundColor = .systemBackground
         collectionView.register(
             GalleryCollectionViewCell.self,
@@ -116,6 +107,21 @@ class PhotoViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
     }
     
+    private func configurePhotoImageView() {
+        photoImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            photoImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            photoImageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+            photoImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            photoImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            photoImageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            photoImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+        ])
+        
+        photoImageView.clipsToBounds = true
+        photoImageView.contentMode = .scaleAspectFit
+    }
+    
     private func configureSuccsessImageView() {
         checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -129,19 +135,13 @@ class PhotoViewController: UIViewController {
         checkmarkImageView.alpha = 0
     }
     
-    private func configureBindings() {
+    private func setupBindingsViewModelToView() {
         viewModel.photo
             .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] data in
-                guard let image = UIImage(data: data) else {
-                    self.photoImageView.setImage(Images.placeholder)
-                    self.photoImageView.startLoadingAnimation()
-                    return
-                }
-                self.photoImageView.stopLoadingAnimation()
-                self.photoImageView.setImage(image)
+                self.photoImageView.setImage(data)
             }
             .store(in: &bindings)
         
@@ -156,8 +156,7 @@ class PhotoViewController: UIViewController {
         viewModel.cellCount
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] count in
-                print(count)
+            .sink { [unowned self] _ in
                 self.collectionView.reloadData()
             }
             .store(in: &bindings)
@@ -165,14 +164,6 @@ class PhotoViewController: UIViewController {
         viewModel.error
             .sink { [unowned self] error in
                 self.error.send(error)
-            }
-            .store(in: &bindings)
-        
-        viewModel.showAlert
-            .receive(on: DispatchQueue.main)
-            .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
-            .sink { [unowned self] error in
-                self.handleError(error)
             }
             .store(in: &bindings)
     }
@@ -216,6 +207,7 @@ class PhotoViewController: UIViewController {
     }
 }
 
+// MARK: - Extension UICollectionViewDataSource
 extension PhotoViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.getCellCount()
@@ -234,12 +226,14 @@ extension PhotoViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - Extension UICollectionViewDelegate
 extension PhotoViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.setNewIndex(indexPath.row)
     }
 }
 
+// MARK: - Extension UIScrollViewDelegate
 extension PhotoViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         photoImageView
@@ -269,9 +263,5 @@ extension PhotoViewController: UIScrollViewDelegate {
         } else {
             scrollView.contentInset = .zero
         }
-    }
-    
-    private func handleError(_ error: String) {
-        showAlert(title: "Error", message: error)
     }
 }

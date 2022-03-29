@@ -16,10 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         UINavigationBar.appearance().tintColor = .label
-        coordinator = .init(window: window!)
+        coordinator = .init(for: window!)
         coordinator?.start()
-        URLCache().removeAllCachedResponses()
-        window?.makeKeyAndVisible()
         return true
     }
 }

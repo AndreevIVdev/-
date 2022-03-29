@@ -7,11 +7,14 @@
 
 import UIKit
 
+// MARK: - Protocol LoadingViewController
 class LoadingViewController: UIViewController {
     
+    // MARK: - Private Properties
     private let containerView: UIView = .init()
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
     
+    // MARK: - Public Methods
     func showLoadingView() {
         DispatchQueue.main.async {
             self.containerView.backgroundColor = .systemBackground

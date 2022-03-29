@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - Enum UIHelper
 enum UIHelper {
 
     static func createTwoColumnFlowLayout(in view: UIView) -> UICollectionViewFlowLayout {

@@ -8,11 +8,16 @@
 
 import UIKit
 
+// MARK: - Class GalleryCollectionViewCell
 final class GalleryCollectionViewCell: UICollectionViewCell {
     
-    private let imageView: TTImageView = .init()
+    // MARK: - Public Properties
     private(set) var id: UUID = .init()
     
+    // MARK: - Private Properties
+    private let imageView: TTImageView = .init()
+    
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureCell()
@@ -22,35 +27,22 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Override Methods
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.image = Images.placeholder
+        imageView.image = nil
         imageView.startLoadingAnimation()
         id = UUID()
     }
     
-    func set(by photo: Photo) {
-        guard let url = URL(string: photo.sizes[4].url) else { return }
-        NetworkingManager.shared.fetchDataWithOutErrorHandling(from: url) { [weak self, id] data in
-            guard let self = self,
-                  let data = data,
-                  self.id == id
-            else { return }
-            DispatchQueue.main.async {
-                self.imageView.image = UIImage(data: data)
-            }
-        }
-    }
-    
+    // MARK: - Public Methods
     func set(by data: Data?) {
-        guard let data = data,
-              let image = UIImage(data: data) else { return }
         DispatchQueue.main.async {
-            self.imageView.setImage(image)
-            self.imageView.stopLoadingAnimation()
+            self.imageView.setImage(data)
         }
     }
     
+    // MARK: - Private Methods
     private func configureCell() {
         contentView.addSubViews(imageView)
         imageView.frame = contentView.bounds

@@ -1,0 +1,8 @@
+"serverProblem" = "Something went wrong on the server side, please try again later";
+"accessDenied" = "Access denied, please relogin";
+"noData" = "Something went wrong with internet, please try again later";
+"urlError" = "Internal error";
+"invalidResponse" = "Something went wrong with VK servers, please try again later";
+"internalError" = "Application internal logic error";
+"invalidToken" = "Authorisation error, please relogin";
+"unsuccessfulLogin" = "You are not logged into the app";

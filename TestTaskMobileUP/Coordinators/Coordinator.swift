@@ -9,23 +9,39 @@
 import UIKit
 import Combine
 
-final class Coordinator {
+// MARK: - Class Coordinator
+final class Coordinator: NSObject {
     
+    // MARK: - Private Properties
     private let window: UIWindow
-    private let navigationController: UINavigationController = .init()
+    private let photosNavigationController: UINavigationController = .init()
     private let authManager: AuthManager = .shared
-    
     private var bindings: Set<AnyCancellable> = .init()
     
-    init(
-        window: UIWindow
-    ) {
+    // MARK: - Initializers
+    init(for window: UIWindow) {
         self.window = window
-        let blankViewController: AuthViewController = .init {}
-        window.rootViewController = blankViewController
+        super.init()
+        setupBindingsSelfToSelf()
+        print("\(String(describing: type(of: self))) INIT")
     }
     
+    // MARK: - Deinitializers
+    deinit {
+        print("\(String(describing: type(of: self))) DEINIT")
+    }
+    
+    // MARK: - Public Methods
     func start() {
+        let authViewController: AuthViewController = .init()
+        authViewController.delegate = self
+        window.rootViewController = authViewController
+        window.makeKeyAndVisible()
+        authManager.isLoggedIn()
+    }
+    
+    // MARK: - Private Methods
+    private func setupBindingsSelfToSelf() {
         authManager.$state
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -40,16 +56,79 @@ final class Coordinator {
                 self.handleError(error)
             }
             .store(in: &bindings)
-        
-        authManager.isLoggedIn()
     }
     
-    private func authButtonTapped() {
-        authManager.isLoggedIn { isLogged in
-            guard isLogged == false else { return }
+    private func handleState(state: AuthState) {
+        switch state {
+        case .authorized:
+            guard let token = authManager.getToken() else { return }
+            let galleryViewController: GalleryViewController = .init(token: token)
+            galleryViewController.delegate = self
+            photosNavigationController.viewControllers = [
+                galleryViewController
+            ]
+            window.rootViewController = photosNavigationController
+        case .undefined, .unauthorized:
+            if window.rootViewController is AuthViewController {
+                return
+            }
+            let authViewController: AuthViewController = .init()
+            authViewController.delegate = self
+            window.rootViewController = authViewController
+            photosNavigationController.viewControllers = []
+        }
+    }
+    
+    private func handleError(_ error: Error) {
+        if let error = error as? TTError {
+            switch error {
+            case .accessDenied, .invalidToken:
+                self.window.rootViewController?.showAlert(
+                    title: "Error".localized(),
+                    message: error.rawValue.localized()
+                ) {
+                    self.authManager.logoutFromCurrentAccount()
+                }
+            case .noData, .urlError, .invalidResponse, .internalError, .serverProblem, .unsuccessfulLogin:
+                self.window.rootViewController?.showAlert(
+                    title: "Error".localized(),
+                    message: error.rawValue.localized()
+                )
+            }
+        } else {
+            self.window.rootViewController?.showAlert(
+                title: "Error".localized(),
+                message: error.localizedDescription
+            ) {
+                self.authManager.undefine()
+            }
+        }
+    }
+}
+
+// MARK: - Extension UIAdaptivePresentationControllerDelegate
+extension Coordinator: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        authManager.isLoggedIn { [weak self] isLogged in
+            guard let self = self,
+                  isLogged == false else { return }
             DispatchQueue.main.async {
-                guard let request = VKClient.loginRequest() else { return }
-                let viewController: WebViewController = .init(request: request) { [weak self] result in
+                self.handleError(TTError.unsuccessfulLogin)
+            }
+        }
+    }
+}
+
+// MARK: - Extension AuthViewControllerDelegate
+extension Coordinator: AuthViewControllerDelegate {
+    
+    func signInButtonTapped() {
+        authManager.isLoggedIn { isLoggedIn in
+            guard isLoggedIn == false else { return }
+            DispatchQueue.main.async {
+                guard let url = VKClient.loginURL() else { return }
+                let viewController: WebViewController = .init(url: url) { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let token):
@@ -59,70 +138,38 @@ final class Coordinator {
                     }
                 }
                 viewController.modalPresentationStyle = .popover
-                DispatchQueue.main.async {
-                    self.window.rootViewController?.present(viewController, animated: true)
-                }
+                viewController.presentationController?.delegate = self
+                self.window.rootViewController?.present(viewController, animated: true)
             }
         }
     }
+}
+
+// MARK: - Extension GalleryViewControllerDelegate
+extension Coordinator: GalleryViewControllerDelegate {
     
-    private func handleSignOut() {
+    func signOutButtonTapped() {
         authManager.logoutFromCurrentAccount()
     }
     
-    private func handleGalleryTap(index: Int) {
+    func didSelectItemAt(_ index: Int) {
         guard let token = authManager.getToken() else { return }
         let photoViewController = PhotoViewController(
             token: token,
             initialIndex: index
         )
+        
         photoViewController.error
+            .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] error in
                 self.handleError(error)
             }
             .store(in: &bindings)
         
-        navigationController.pushViewController(
+        photosNavigationController.pushViewController(
             photoViewController,
             animated: true
         )
-    }
-        
-    private func handleState(state: AuthState) {
-        switch state {
-        case .authorized:
-            guard let token = authManager.getToken() else { return }
-            self.navigationController.viewControllers = [
-                GalleryViewController(
-                    token: token,
-                    signOut: handleSignOut,
-                    choosen: handleGalleryTap(index:)
-                )
-            ]
-            self.window.rootViewController = self.navigationController
-        case .undefined, .unauthorized:
-            self.window.rootViewController = AuthViewController(signIn: self.authButtonTapped)
-        }
-    }
-
-    
-    private func handleError(_ error: Error) {
-        if let error = error as? TTError {
-            switch error {
-            case .accessDenied, .invalidToken:
-                self.window.rootViewController?.showAlert(title: "Error", message: error.rawValue) {
-                    self.authManager.logoutFromCurrentAccount()
-                }
-            case .noData, .urlError, .invalidResponse, .internalError, .serverProblem:
-                self.window.rootViewController?.showAlert(title: "Error", message: error.rawValue) {
-                    self.authManager.undefine()
-                }
-            }
-        } else {
-            self.window.rootViewController?.showAlert(title: "Error", message: error.localizedDescription) {
-                self.authManager.undefine()
-            }
-        }
     }
 }

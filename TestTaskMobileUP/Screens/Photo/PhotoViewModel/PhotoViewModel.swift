@@ -8,38 +8,49 @@
 import Foundation
 import Combine
 
+// MARK: - Protocol PhotoViewModable
 protocol PhotoViewModable: AnyObject {
     var title: CurrentValueSubject<String, Never> { get }
-    var photo: CurrentValueSubject<Data, Never> { get }
+    var photo: CurrentValueSubject<Data?, Never> { get }
     var currentIndex: CurrentValueSubject<Int, Never> { get }
     var cellCount: CurrentValueSubject<Int, Never> { get }
-    var showAlert: PassthroughSubject<String, Never> { get }
     var error: PassthroughSubject<Error, Never> { get }
     func getCellCount() -> Int
     func getCell(for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void)
     func setNewIndex(_ newIndex: Int)
 }
 
+// MARK: - Class PhotoViewModel
 class PhotoViewModel: PhotoViewModable {
     
+    // MARK: - Publishers
+    private(set) var error: PassthroughSubject<Error, Never> = .init()
     private(set) var title: CurrentValueSubject<String, Never> = .init("")
-    private(set) var photo: CurrentValueSubject<Data, Never> = .init(Data())
+    private(set) var photo: CurrentValueSubject<Data?, Never> = .init(Data())
     private(set) var currentIndex: CurrentValueSubject<Int, Never> = .init(0)
     private(set) var cellCount: CurrentValueSubject<Int, Never> = .init(0)
-    private(set) var showAlert: PassthroughSubject<String, Never> = .init()
-    var error: PassthroughSubject<Error, Never> = .init()
-    private var bindings: Set<AnyCancellable> = .init()
-    private let model: PhotoModable
     
+    // MARK: - Private Properties
+    private let model: PhotoModable
+    private var bindings: Set<AnyCancellable> = .init()
     private var photoID: UUID = .init()
     
+    // MARK: - Initializers
     init(token: String, currentindex: Int) {
         model = PhotoModel.init(token: token)
-        bind()
+        bindViewModelToViewModel()
+        bindViewModelToModel()
         model.initialize()
         self.currentIndex.send(currentindex)
+        print("\(String(describing: type(of: self))) INIT")
     }
     
+    // MARK: - Deinitializers
+    deinit {
+        print("\(String(describing: type(of: self))) DEINIT")
+    }
+    
+    // MARK: - Public Methods
     func setNewIndex(_ newIndex: Int) {
         currentIndex.send(newIndex)
     }
@@ -52,7 +63,9 @@ class PhotoViewModel: PhotoViewModable {
         cellCount.value
     }
     
-    private func bind() {
+    
+    // MARK: - Private Methods
+    private func bindViewModelToViewModel() {
         currentIndex
             .sink { [unowned self] _ in
                 self.updateTitle()
@@ -64,7 +77,9 @@ class PhotoViewModel: PhotoViewModable {
                 self.updatePhoto()
             }
             .store(in: &bindings)
-        
+    }
+    
+    private func bindViewModelToModel() {
         model.photosCount
             .sink { [unowned self] count in
                 self.cellCount.send(count)
@@ -82,7 +97,8 @@ class PhotoViewModel: PhotoViewModable {
             .debounce(for: .seconds(1), scheduler: RunLoop.main)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] error in
-                self.handleError(error)
+                self.error.send(error)
+                localErrorHandling(error)
             }
             .store(in: &bindings)
     }
@@ -93,7 +109,7 @@ class PhotoViewModel: PhotoViewModable {
     
     private func updatePhoto() {
         photoID = UUID()
-        self.photo.send(Data())
+        self.photo.send(nil)
         model.getPhoto(with: .large, for: currentIndex.value, with: photoID) { [weak self] data, id in
             guard let self = self,
                   let data = data,
@@ -104,19 +120,17 @@ class PhotoViewModel: PhotoViewModable {
         }
     }
     
-    private func handleError(_ error: Error) {
+    private func localErrorHandling(_ error: Error) {
+        
         if let error = error as? TTError {
             switch error {
-            case .accessDenied, .invalidToken:
-                self.error.send(error)
             case .noData, .urlError, .invalidResponse, .internalError, .serverProblem:
-                showAlert.send(error.rawValue)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     self.model.initialize()
                 }
+            default:
+                print()
             }
-        } else {
-            showAlert.send(error.localizedDescription)
         }
     }
 }

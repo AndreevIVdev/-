@@ -7,14 +7,17 @@
 
 import UIKit
 
+// MARK: - Class TTImageView
 class TTImageView: UIImageView {
+    
+    // MARK: - Private Properties
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
     
+    // MARK: - Initializers
     init() {
         super.init(frame: .zero)
         addSubViews(activityIndicator)
         configureActivityIndicator()
-        image = Images.placeholder
         startLoadingAnimation()
     }
     
@@ -22,6 +25,7 @@ class TTImageView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public Methods
     func startLoadingAnimation() {
         activityIndicator.startAnimating()
     }
@@ -30,7 +34,11 @@ class TTImageView: UIImageView {
         activityIndicator.stopAnimating()
     }
     
-    func setImage(_ image: UIImage) {
+    func setImage(_ data: Data?) {
+        var image: UIImage?
+        if let data = data {
+            image = UIImage(data: data)
+        }
         UIView.transition(
             with: self,
             duration: 0.75,
@@ -38,8 +46,10 @@ class TTImageView: UIImageView {
             animations: { self.image = image },
             completion: nil
         )
+        image == nil ? startLoadingAnimation() : stopLoadingAnimation()
     }
     
+    // MARK: - Private Methods
     private func configureActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+// MARK: - Protocol PhotoModable
 protocol PhotoModable: AnyObject {
     var photosCount: PassthroughSubject<Int, Never> { get }
     var initializationDone: PassthroughSubject<Void, Never> { get }
@@ -17,27 +18,34 @@ protocol PhotoModable: AnyObject {
     func initialize()
 }
 
-enum PhotoSize {
-    case small
-    case medium
-    case large
-}
-
+// MARK: - Class PhotoModel 😀
 class PhotoModel: PhotoModable {
+    
+    // MARK: - Publishers
+    private(set) var photosCount: PassthroughSubject<Int, Never> = .init()
+    private(set) var initializationDone: PassthroughSubject<Void, Never> = .init()
+    private(set) var error: PassthroughSubject<Error, Never> = .init()
+    
+    // MARK: - Private Properties
     private let token: String
     private var smallPictures: [Data?] = []
     private var mediumPictures: [Data?] = []
     private var bigPictures: [Data?] = []
     private var bindings: Set<AnyCancellable> = .init()
-    private(set) var photosCount: PassthroughSubject<Int, Never> = .init()
-    private(set) var initializationDone: PassthroughSubject<Void, Never> = .init()
-    private(set) var error: PassthroughSubject<Error, Never> = .init()
     private var album: Album?
     
+    // MARK: - Initializers
     init(token: String) {
         self.token = token
+        print("\(String(describing: type(of: self))) INIT")
     }
     
+    // MARK: - Deinitializers
+    deinit {
+        print("\(String(describing: type(of: self))) DEINIT")
+    }
+    
+    // MARK: - Public Methods
     func initialize() {
         loadAlbum { [weak self] in
             guard let self = self,
@@ -75,23 +83,11 @@ class PhotoModel: PhotoModable {
         loadPhoto(with: size, index: index) { [weak self] data in
             guard let self = self,
                   let data = data else {
-                completion(nil, id)
+                completion(Images.placeholder.pngData(), id)
                 return
             }
             self.savePhoto(data, with: size, and: index)
             completion(data, id)
-        }
-    }
-    
-    private func savePhoto(_ photo: Data, with size: PhotoSize, and index: Int) {
-        switch size {
-            
-        case .small:
-            smallPictures[index] = photo
-        case .medium:
-            mediumPictures[index] = photo
-        case .large:
-            bigPictures[index] = photo
         }
     }
     
@@ -102,9 +98,10 @@ class PhotoModel: PhotoModable {
         return album.photos[index].date
     }
     
-    func loadAlbum(completed: @escaping () -> Void) {
+    // MARK: - Private Methods
+    private func loadAlbum(completed: @escaping () -> Void) {
         guard let url = VKClient.photosURL(with: self.token) else { return }
-        NetworkingManager.shared.fetchData(from: url) { [weak self] result in
+        NetworkManager.shared.fetchData(from: url) { [weak self] result in
             defer {
                 completed()
             }
@@ -134,7 +131,7 @@ class PhotoModel: PhotoModable {
             photoSize = album.photos[index].sizes.min(by: { $0.width < $1.width })
         case .medium:
             photoSize = album.photos[index].sizes.min {
-                abs($0.width - screenWidth / 2) < abs($1.width - screenWidth / 2)
+                abs($0.width - screenWidth * 2 / 3) < abs($1.width - screenWidth * 2 / 3)
             }
         case .large:
             photoSize = album.photos[index].sizes.min(by: { abs($0.width - screenWidth) < abs($1.width - screenWidth) })
@@ -145,8 +142,27 @@ class PhotoModel: PhotoModable {
             return
         }
         
-        NetworkingManager.shared.fetchDataWithOutErrorHandling(from: url) { data in
+        NetworkManager.shared.fetchDataWithOutErrorHandling(from: url) { data in
             completion(data)
         }
     }
+    
+    private func savePhoto(_ photo: Data, with size: PhotoSize, and index: Int) {
+        switch size {
+            
+        case .small:
+            smallPictures[index] = photo
+        case .medium:
+            mediumPictures[index] = photo
+        case .large:
+            bigPictures[index] = photo
+        }
+    }
+}
+
+// MARK: - Enum PhotoSize
+enum PhotoSize {
+    case small
+    case medium
+    case large
 }
