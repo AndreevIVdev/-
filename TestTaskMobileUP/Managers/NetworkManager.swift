@@ -8,13 +8,17 @@
 import Foundation
 
 // MARK: - Class NetworkManager
+/// Network access class
 final class NetworkManager {
     
     // MARK: - Public Static Properties
+    /// The only one instance of Network manager
     static let shared = NetworkManager()
     
     // MARK: - Private Properties
+    /// To store loaded data in local storage
     private let cache: NSCache<NSString, NSData> = .init()
+    /// For requests in queue
     private var loadingResponses: [URL: [(Data?) -> Void]] = .init()
     
     // MARK: - Initializers
@@ -28,6 +32,10 @@ final class NetworkManager {
     }
     
     // MARK: - Public Methods
+    /// Fetchs data from url with propper error handling
+    /// - Parameters:
+    ///   - url: source url
+    ///   - completed: asynchronous result in closure
     func fetchData(
         from url: URL,
         completed: @escaping (Result<Data, Error>) -> Void
@@ -64,7 +72,10 @@ final class NetworkManager {
         .resume()
     }
     
-    
+    /// Fetchs data from url with propper error handling without cache
+    /// - Parameters:
+    ///   - url: source url
+    ///   - completed: asynchronous result in closure
     func fetchDataAvoidingCache(
         from url: URL,
         completed: @escaping (Result<Data, Error>) -> Void
@@ -94,6 +105,10 @@ final class NetworkManager {
         .resume()
     }
     
+    /// Fetchs data from url without error handling
+    /// - Parameters:
+    ///   - url: source url
+    ///   - completed: asynchronous result in closure
     func fetchDataWithOutErrorHandling(
         from url: URL,
         completed: @escaping (Data?) -> Void

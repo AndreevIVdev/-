@@ -56,7 +56,7 @@ class PhotoViewModel: PhotoViewModable {
     }
     
     func getCell(for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void) {
-        model.getPhoto(with: .small, for: index, with: id, completion: completion)
+        model.getPhoto(size: .small, for: index, and: id, completion: completion)
     }
     
     func getCellCount() -> Int {
@@ -110,7 +110,7 @@ class PhotoViewModel: PhotoViewModable {
     private func updatePhoto() {
         photoID = UUID()
         self.photo.send(nil)
-        model.getPhoto(with: .large, for: currentIndex.value, with: photoID) { [weak self] data, id in
+        model.getPhoto(size: .large, for: currentIndex.value, and: photoID) { [weak self] data, id in
             guard let self = self,
                   let data = data,
                   self.photoID == id else {

@@ -10,12 +10,17 @@ import UIKit
 import Combine
 
 // MARK: - Class Coordinator
+/// Coordinator for error handling and navigation
 final class Coordinator: NSObject {
     
     // MARK: - Private Properties
+    /// Main app window
     private let window: UIWindow
+    /// Navigation controller for main appflow
     private let photosNavigationController: UINavigationController = .init()
+    /// Authorisation and login manager
     private let authManager: AuthManager = .shared
+    /// Subscriptions storage
     private var bindings: Set<AnyCancellable> = .init()
     
     // MARK: - Initializers
@@ -32,6 +37,7 @@ final class Coordinator: NSObject {
     }
     
     // MARK: - Public Methods
+    /// Ыtart of the application under the control of the coordinator
     func start() {
         let authViewController: AuthViewController = .init()
         authViewController.delegate = self
@@ -41,12 +47,13 @@ final class Coordinator: NSObject {
     }
     
     // MARK: - Private Methods
+    /// Initialize reactive connections
     private func setupBindingsSelfToSelf() {
         authManager.$state
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] state in
-                self.handleState(state: state)
+                self.handleState(state)
             }
             .store(in: &bindings)
         
@@ -58,7 +65,9 @@ final class Coordinator: NSObject {
             .store(in: &bindings)
     }
     
-    private func handleState(state: AuthState) {
+    /// Handles the current state of the application
+    /// - Parameter state: current application state
+    private func handleState(_ state: AuthState) {
         switch state {
         case .authorized:
             guard let token = authManager.getToken() else { return }
@@ -79,6 +88,8 @@ final class Coordinator: NSObject {
         }
     }
     
+    /// Handles errors that occur while the application is running
+    /// - Parameter error: current error
     private func handleError(_ error: Error) {
         if let error = error as? TTError {
             switch error {
@@ -109,6 +120,8 @@ final class Coordinator: NSObject {
 // MARK: - Extension UIAdaptivePresentationControllerDelegate
 extension Coordinator: UIAdaptivePresentationControllerDelegate {
     
+    /// Handles hiding the modal controller
+    /// - Parameter presentationController: presentation manager
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         authManager.isLoggedIn { [weak self] isLogged in
             guard let self = self,
@@ -123,6 +136,7 @@ extension Coordinator: UIAdaptivePresentationControllerDelegate {
 // MARK: - Extension AuthViewControllerDelegate
 extension Coordinator: AuthViewControllerDelegate {
     
+    /// Handles the login button click on the login screen
     func signInButtonTapped() {
         authManager.isLoggedIn { isLoggedIn in
             guard isLoggedIn == false else { return }
@@ -148,10 +162,12 @@ extension Coordinator: AuthViewControllerDelegate {
 // MARK: - Extension GalleryViewControllerDelegate
 extension Coordinator: GalleryViewControllerDelegate {
     
+    /// Handles the sign out button click on the gallery screen
     func signOutButtonTapped() {
         authManager.logoutFromCurrentAccount()
     }
     
+    /// Handles the photo tap on the gallery screen
     func didSelectItemAt(_ index: Int) {
         guard let token = authManager.getToken() else { return }
         let photoViewController = PhotoViewController(

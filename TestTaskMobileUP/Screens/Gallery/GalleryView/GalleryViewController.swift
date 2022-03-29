@@ -30,9 +30,7 @@ class GalleryViewController: LoadingViewController {
     
     // MARK: - Initializers
     init(token: String) {
-        viewModel = GalleryViewModel.init(
-            token: token
-        )
+        viewModel = GalleryViewModel.init(token: token)
         super.init(nibName: nil, bundle: nil)
         print("\(String(describing: type(of: self))) INIT")
     }

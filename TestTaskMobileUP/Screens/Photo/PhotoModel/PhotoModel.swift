@@ -13,7 +13,7 @@ protocol PhotoModable: AnyObject {
     var photosCount: PassthroughSubject<Int, Never> { get }
     var initializationDone: PassthroughSubject<Void, Never> { get }
     var error: PassthroughSubject<Error, Never> { get }
-    func getPhoto(with size: PhotoSize, for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void)
+    func getPhoto(size: PhotoSize, for index: Int, and id: UUID, completion: @escaping (Data?, UUID) -> Void)
     func getTitle(for index: Int) -> Int?
     func initialize()
 }
@@ -58,7 +58,7 @@ class PhotoModel: PhotoModable {
         }
     }
     
-    func getPhoto(with size: PhotoSize, for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void) {
+    func getPhoto(size: PhotoSize, for index: Int, and id: UUID, completion: @escaping (Data?, UUID) -> Void) {
         guard let album = album,
               index < album.count else {
             completion(nil, id)

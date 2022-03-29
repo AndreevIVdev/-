@@ -9,13 +9,19 @@ import UIKit
 import WebKit
 
 // MARK: - Class WebViewController
+/// Remote login screen
 class WebViewController: UIViewController {
 
     // MARK: - Private Properties
+    /// View to show external web page
     private let webView: WKWebView = .init()
+    /// Shows downloading animation
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
+    /// Closes the modal screen with tap
     private let closeButton: UIButton = .init()
+    /// Result returning closure
     private let completed: (Result<String, Error>) -> Void?
+    /// URL for remote Web page
     private let url: URL
     
     // MARK: - Initializers
@@ -36,6 +42,7 @@ class WebViewController: UIViewController {
     }
     
     // MARK: - Override Methods
+    /// Creates the view that the controller manages
     override func loadView() {
         super.loadView()
         view = webView
@@ -50,6 +57,7 @@ class WebViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    /// Configures view to show external login Web page
     private func configureWebView() {
         webView.navigationDelegate = self
         webView.addSubViews(activityIndicator, closeButton)
@@ -61,6 +69,7 @@ class WebViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
     }
     
+    /// Configures navigation item and screen close button
     private func configureNavigationItem() {
         closeButton.setImage(Images.xmark, for: .normal)
         closeButton.tintColor = .black
@@ -74,11 +83,13 @@ class WebViewController: UIViewController {
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     
+    /// Starts downloading of authorization Web page
     private func startLoading() {
         webView.load(URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData))
         activityIndicator.startAnimating()
     }
     
+    /// Handles close butto tap
     @objc private func closeButtonTapped() {
         if let presentationController = presentationController {
             presentationController.delegate?.presentationControllerDidDismiss?(presentationController)
@@ -89,7 +100,12 @@ class WebViewController: UIViewController {
 
 // MARK: - Extension WKNavigationDelegate
 extension WebViewController: WKNavigationDelegate {
-
+    
+    /// Handles current state of the Web view
+    /// - Parameters:
+    ///   - webView: current web view
+    ///   - navigationAction: An object that contains information about an action that causes navigation to occur
+    ///   - decisionHandler: Constants that indicate whether to allow or cancel navigation to a webpage
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
             if let token = VKClient.getTokenFrom(url: url) {
@@ -107,10 +123,19 @@ extension WebViewController: WKNavigationDelegate {
         decisionHandler(.allow)
     }
     
+    /// Handles web page downloading finish
+    /// - Parameters:
+    ///   - webView: current webview
+    ///   - navigation: An object that tracks the loading progress of a webpage
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
     }
-
+    
+    /// Handles posssible error during webpage downloading
+    /// - Parameters:
+    ///   - webView: current webview
+    ///   - navigation: An object that tracks the loading progress of a webpage
+    ///   - error: A type representing an error value that can be thrown
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         activityIndicator.stopAnimating()
         completed(.failure(error))

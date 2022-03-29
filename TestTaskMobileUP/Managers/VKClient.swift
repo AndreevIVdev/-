@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - Class VKClient
+/// Interface for VK public API
 enum VKClient {
     
     // MARK: - Private Properties
@@ -21,6 +22,8 @@ enum VKClient {
     }
     
     // MARK: - Public Static Methods
+    /// Returns login link
+    /// - Returns: url for authorization web page
     static func loginURL() -> URL? {
         let clientID = "8115098"
         let redirectURL = "&redirect_uri=https://oauth.vk.com/blank.html"
@@ -33,6 +36,9 @@ enum VKClient {
         )
     }
     
+    /// Returns link to get specified photos info
+    /// - Parameter token: valid app token
+    /// - Returns: url for request about photos album
     static func photosURL(with token: String) -> URL? {
     
         let ownerID = "-128666765"
@@ -44,6 +50,9 @@ enum VKClient {
         )
     }
     
+    /// Returns token from given url
+    /// - Parameter url: url as source for token
+    /// - Returns: Token from given url or nil
     static func getTokenFrom(url: URL) -> String? {
         
         URLComponents(
@@ -54,6 +63,9 @@ enum VKClient {
             .value
     }
     
+    /// Generates url for token validation
+    /// - Parameter token: token for check
+    /// - Returns: url for token validation request
     static func validationURL(with token: String) -> URL? {
     
         let accessToken = "&access_token="
@@ -70,6 +82,9 @@ enum VKClient {
         )
     }
     
+    /// Сhecks link for the access deny
+    /// - Parameter url: url for check
+    /// - Returns: true -> access denied
     static func isAccessDenied(url: URL) -> Bool {
         url.absoluteString.lowercased().range(of: "access_denied") != nil
     }

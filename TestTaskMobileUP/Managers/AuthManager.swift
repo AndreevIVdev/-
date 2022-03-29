@@ -13,13 +13,17 @@ import Combine
 final class AuthManager {
     
     // MARK: - Publishers
+    /// Current application state publisher
     @Published private(set) var state: AuthState = .undefined
+    /// Possible error publisher
     private(set) var error: PassthroughSubject<Error, Never> = .init()
     
     // MARK: - Public Static Properties
+    /// The only one instance of Authorisation manager
     static let shared = AuthManager()
     
     // MARK: - Private Properties
+    /// Subscriptions storage
     private var bindings: Set<AnyCancellable> = .init()
     
     // MARK: - Initializers
@@ -37,6 +41,8 @@ final class AuthManager {
     }
     
     // MARK: - Public Methods
+    /// Сurrent application state request
+    /// - Parameter completion: Asynchronously returns result
     func isLoggedIn(completion: ((Bool) -> Void)? = nil) {
         if let token = getToken() {
             validateToken(with: token) { [weak self] result in
@@ -62,17 +68,22 @@ final class AuthManager {
             completion?(false)
         }
     }
-
+    
+    /// Saves the new token
+    /// - Parameter token: new value
     func save(_ token: String) {
         UserDefaults.standard.set(token, forKey: "access_token")
         UserDefaults.standard.synchronize()
         state = .authorized
     }
     
+    /// Returns the current application token
+    /// - Returns: optional token value
     func getToken() -> String? {
         UserDefaults.standard.string(forKey: "access_token")
     }
     
+    /// Logs out of current account and deletes the token
     func logoutFromCurrentAccount() {
         if getToken() == nil {
             return
@@ -97,6 +108,7 @@ final class AuthManager {
         state = .unauthorized
     }
     
+    /// If something went wrong puts the application in an safe state
     func undefine() {
         state = .undefined
     }
@@ -124,6 +136,7 @@ final class AuthManager {
 }
 
 // MARK: - Enum AuthState
+/// Three possible application states
 enum AuthState: Equatable {
     case authorized
     case unauthorized

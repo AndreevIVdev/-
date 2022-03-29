@@ -42,7 +42,7 @@ class GalleryViewModel: GalleryViewModable {
     
     // MARK: - Public Methods
     func getCell(for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void) {
-        model.getPhoto(with: .medium, for: index, with: id, completion: completion)
+        model.getPhoto(size: .medium, for: index, and: id, completion: completion)
     }
     
     func getCellCount() -> Int {

@@ -8,18 +8,24 @@
 import UIKit
 
 // MARK: - Protocol AuthViewControllerDelegate
+/// Authorisation ViewController delegate
 protocol AuthViewControllerDelegate: AnyObject {
+    /// Handles an action button click
     func signInButtonTapped()
 }
 
 // MARK: - Class AuthViewController
+/// Application login screen View Controller
 class AuthViewController: UIViewController {
     
     // MARK: - Public Properties
+    ///  Event external handling delegate
     weak var delegate: AuthViewControllerDelegate?
     
     // MARK: - Private Properties
+    /// Screen title
     private let titleLabel: UILabel = .init()
+    /// Login button
     private let actionButton: UIButton = .init()
     
     // MARK: - Initializers
@@ -47,6 +53,7 @@ class AuthViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    /// Configurate basic screen settings
     private func configureViewController() {
         view.backgroundColor = .systemGray5
         view.addSubViews(
@@ -55,6 +62,7 @@ class AuthViewController: UIViewController {
         )
     }
     
+    /// Screen title configuration
     private func configureTitleLabel() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = .preferredFont(forTextStyle: .largeTitle).bold()
@@ -72,6 +80,7 @@ class AuthViewController: UIViewController {
         ])
     }
     
+    /// Login button configuration
     private func configureActionButton() {
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.setTitle("Вход через VK", for: .normal)
@@ -94,6 +103,7 @@ class AuthViewController: UIViewController {
         )
     }
     
+    /// Handles login button click
     @objc private  func actionButtonTapped() {
         delegate?.signInButtonTapped()
     }
