@@ -40,7 +40,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    /// Initialized cell with given data
+    /// Initializes cell with given data
     /// - Parameter data: image in data format
     func set(by data: Data?) {
         DispatchQueue.main.async {
