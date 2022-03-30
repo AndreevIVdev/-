@@ -153,7 +153,8 @@ extension GalleryViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: GalleryCollectionViewCell.description(),
             for: indexPath) as! GalleryCollectionViewCell
-        viewModel.getCell(for: indexPath.row, with: cell.id) { [cell] data, id in
+        viewModel.getCell(for: indexPath.row, with: cell.id) { [weak cell] data, id in
+            guard let cell = cell else { return }
             if cell.id == id {
                 cell.set(by: data)
             }
