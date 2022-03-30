@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIView {
+    
     /// Adds many views to subviews
     /// - Parameter views: views to add
     func addSubViews(_ views: UIView...) {

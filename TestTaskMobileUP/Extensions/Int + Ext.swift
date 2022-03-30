@@ -8,6 +8,7 @@
 import Foundation
 
 extension Int {
+    
     /// Turns given integer into string with display format "d MMMM YYYY"
     /// - Returns: formatted strng
     func convertToTime() -> String {

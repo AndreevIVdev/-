@@ -18,7 +18,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Private Properties
     /// Container for image
-    private let imageView: TTImageView = .init()
+    private let imageView: LoadingImageView = .init()
     
     // MARK: - Initializers
     override init(frame: CGRect) {

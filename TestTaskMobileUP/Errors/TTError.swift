@@ -9,6 +9,7 @@ import Foundation
 
 /// Possible errors while running the application
 enum TTError: String, Error {
+    
     case serverProblem
     case accessDenied
     case noData

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8BC2E9EE27F2055C00E77EC5 /* TTImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC2E9ED27F2055C00E77EC5 /* TTImageView.swift */; };
+		8BC2E9EE27F2055C00E77EC5 /* LoadingImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC2E9ED27F2055C00E77EC5 /* LoadingImageView.swift */; };
 		8BCA39D227EE44F100288B13 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA39D127EE44F100288B13 /* AppDelegate.swift */; };
 		8BCA39DB27EE44F200288B13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCA39DA27EE44F200288B13 /* Assets.xcassets */; };
 		8BCA39DE27EE44F200288B13 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BCA39DC27EE44F200288B13 /* LaunchScreen.storyboard */; };
@@ -38,7 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8BC2E9ED27F2055C00E77EC5 /* TTImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTImageView.swift; sourceTree = "<group>"; };
+		8BC2E9ED27F2055C00E77EC5 /* LoadingImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingImageView.swift; sourceTree = "<group>"; };
 		8BCA39CE27EE44F100288B13 /* TestTaskMobileUP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestTaskMobileUP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BCA39D127EE44F100288B13 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8BCA39DA27EE44F200288B13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -86,7 +86,7 @@
 		8BC2E9EC27F2054600E77EC5 /* ImageViews */ = {
 			isa = PBXGroup;
 			children = (
-				8BC2E9ED27F2055C00E77EC5 /* TTImageView.swift */,
+				8BC2E9ED27F2055C00E77EC5 /* LoadingImageView.swift */,
 			);
 			path = ImageViews;
 			sourceTree = "<group>";
@@ -429,7 +429,7 @@
 				8BF389B227EF237700B6ED75 /* UIHelper.swift in Sources */,
 				8BCA39D227EE44F100288B13 /* AppDelegate.swift in Sources */,
 				8BFD75BF27EF8C490074A277 /* Int + Ext.swift in Sources */,
-				8BC2E9EE27F2055C00E77EC5 /* TTImageView.swift in Sources */,
+				8BC2E9EE27F2055C00E77EC5 /* LoadingImageView.swift in Sources */,
 				8BCA39F927EE455700288B13 /* AuthViewController.swift in Sources */,
 				8BCA39F527EE455700288B13 /* UIIVew + Ext.swift in Sources */,
 				8BCA39F727EE455700288B13 /* UIFont + Ext.swift in Sources */,

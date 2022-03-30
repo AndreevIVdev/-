@@ -1,5 +1,5 @@
 //
-//  TTImageView.swift
+//  LoadingImageView.swift
 //  TestTaskMobileUP
 //
 //  Created by Илья Андреев on 28.03.2022.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-// MARK: - Class TTImageView
+// MARK: - Class LoadingImageView
 /// Custom image view with activity indacator
-class LoadingImageView: UIImageView {
+final class LoadingImageView: UIImageView {
     
     // MARK: - Private Properties
     /// Shows download status

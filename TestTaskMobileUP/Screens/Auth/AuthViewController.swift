@@ -16,7 +16,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 // MARK: - Class AuthViewController
 /// Application login screen View Controller
-class AuthViewController: UIViewController {
+final class AuthViewController: UIViewController {
     
     // MARK: - Public Properties
     ///  Delegate for external handling
@@ -83,7 +83,7 @@ class AuthViewController: UIViewController {
     /// Login button configuration
     private func configureActionButton() {
         actionButton.translatesAutoresizingMaskIntoConstraints = false
-        actionButton.setTitle("Вход через VK", for: .normal)
+        actionButton.setTitle("login".localized(), for: .normal)
         actionButton.backgroundColor = .black
         actionButton.titleLabel?.textColor = .white
         actionButton.titleLabel?.font = .preferredFont(forTextStyle: .headline)

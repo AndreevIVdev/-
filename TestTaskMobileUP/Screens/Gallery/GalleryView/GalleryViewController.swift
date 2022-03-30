@@ -11,13 +11,15 @@ import Combine
 // MARK: - Protocol GalleryViewControllerDelegate
 /// Gallery ViewController delegate
 protocol GalleryViewControllerDelegate: AnyObject {
+    /// Handles sign out button click
     func signOutButtonTapped()
+    /// Handles cell selection
     func didSelectItemAt(_ index: Int)
 }
 
 // MARK: - Class GalleryViewController
 /// Photo gallery screen
-class GalleryViewController: LoadingViewController {
+final class GalleryViewController: LoadingViewController {
     
     // MARK: - Publishers
     /// Publisher that throws possible errors

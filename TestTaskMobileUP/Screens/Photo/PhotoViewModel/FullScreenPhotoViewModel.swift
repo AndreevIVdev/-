@@ -11,6 +11,7 @@ import Combine
 // MARK: - Protocol FullScreenPhotoViewModable
 /// Protocol describing necessary functions of fullscreen Photo View Model instance
 protocol FullScreenPhotoViewModable: AnyObject {
+    
     var title: CurrentValueSubject<String, Never> { get }
     var photo: CurrentValueSubject<Data?, Never> { get }
     var currentIndex: CurrentValueSubject<Int, Never> { get }
@@ -22,7 +23,7 @@ protocol FullScreenPhotoViewModable: AnyObject {
 }
 
 // MARK: - Class FullScreenPhotoViewModel
-class FullScreenPhotoViewModel: FullScreenPhotoViewModable {
+final class FullScreenPhotoViewModel: FullScreenPhotoViewModable {
     
     // MARK: - Publishers
     private(set) var error: PassthroughSubject<Error, Never> = .init()

@@ -11,6 +11,7 @@ import Combine
 // MARK: - Protocol GalleryViewModable
 /// Protocol describing necessary functions of Gallery View Model instance
 protocol GalleryViewModable: AnyObject {
+    
     /// Publisher that sends cell count
     var cellCount: CurrentValueSubject<Int, Never> { get }
     /// Publisher that sends occuring errors
@@ -23,7 +24,7 @@ protocol GalleryViewModable: AnyObject {
 
 // MARK: - Class GalleryViewModel
 /// Photo gallery view model
-class GalleryViewModel: GalleryViewModable {
+final class GalleryViewModel: GalleryViewModable {
     
     // MARK: - Publishers
     /// Publisher that sends cell count

@@ -11,6 +11,7 @@ import Combine
 // MARK: - Protocol PhotoModable
 /// Protocol describing necessary functions of Photo Model instance
 protocol PhotoModable: AnyObject {
+    
     /// Publisher that sends photo count in album
     var photosCount: PassthroughSubject<Int, Never> { get }
     /// Publisher that sends initialization completion notification
@@ -180,14 +181,16 @@ class PhotoModel: PhotoModable {
     ///   - size: Photos resolution template
     ///   - index: Photo position
     private func savePhoto(_ photo: Data, with size: PhotoSize, and index: Int) {
-        switch size {
-            
-        case .small:
-            smallPictures[index] = photo
-        case .medium:
-            mediumPictures[index] = photo
-        case .large:
-            bigPictures[index] = photo
+        DispatchQueue.main.async {
+            switch size {
+                
+            case .small:
+                self.smallPictures[index] = photo
+            case .medium:
+                self.mediumPictures[index] = photo
+            case .large:
+                self.bigPictures[index] = photo
+            }
         }
     }
 }

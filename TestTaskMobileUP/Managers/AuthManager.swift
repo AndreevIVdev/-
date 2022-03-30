@@ -32,12 +32,6 @@ final class AuthManager {
             print("NEW APPSTATE --> \(state)".uppercased())
         }
         .store(in: &bindings)
-        print("\(String(describing: type(of: self))) INIT")
-    }
-    
-    // MARK: - Deinitializers
-    deinit {
-        print("\(String(describing: type(of: self))) DEINIT")
     }
     
     // MARK: - Public Methods
@@ -114,6 +108,10 @@ final class AuthManager {
     }
     
     // MARK: - Private Methods
+    /// Checks given token is it valid or not
+    /// - Parameters:
+    ///   - token: token for check
+    ///   - completion: result in completion block
     private func validateToken(with token: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let url = VKClient.validationURL(with: token) else {
             completion(.failure(TTError.internalError))

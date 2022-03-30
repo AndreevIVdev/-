@@ -8,6 +8,7 @@
 import Foundation
 
 extension String {
+    
     /// Returns the localized string
     /// - Returns: Localized string
     func localized() -> String {

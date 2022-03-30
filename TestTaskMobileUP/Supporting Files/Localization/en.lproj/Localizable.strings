@@ -6,3 +6,4 @@
 "internalError" = "Application internal logic error";
 "invalidToken" = "Authorisation error, please relogin";
 "unsuccessfulLogin" = "You are not logged into the app";
+"login" = "Login via VK";

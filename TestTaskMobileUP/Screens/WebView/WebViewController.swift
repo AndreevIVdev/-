@@ -10,7 +10,7 @@ import WebKit
 
 // MARK: - Class WebViewController
 /// Remote login screen
-class WebViewController: UIViewController {
+final class WebViewController: UIViewController {
 
     // MARK: - Private Properties
     /// View to show external web page

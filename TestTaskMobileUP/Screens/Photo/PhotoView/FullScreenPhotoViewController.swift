@@ -10,7 +10,7 @@ import Combine
 
 // MARK: - Class PhotoViewController
 /// Full screen photo
-class FullScreenPhotoViewController: UIViewController {
+final class FullScreenPhotoViewController: UIViewController {
     
     // MARK: - Publishers
     /// Publisher that throws possible errors
@@ -24,7 +24,7 @@ class FullScreenPhotoViewController: UIViewController {
     /// Lets zoom and move photo on the screen
     private let scrollView: UIScrollView = .init()
     /// Large photo container
-    private let photoImageView: TTImageView = .init()
+    private let photoImageView: LoadingImageView = .init()
     /// Collection view for photo showing
     private let collectionView = UICollectionView(
         frame: .zero,

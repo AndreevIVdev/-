@@ -28,12 +28,6 @@ final class Coordinator: NSObject {
         self.window = window
         super.init()
         setupBindingsSelfToSelf()
-        print("\(String(describing: type(of: self))) INIT")
-    }
-    
-    // MARK: - Deinitializers
-    deinit {
-        print("\(String(describing: type(of: self))) DEINIT")
     }
     
     // MARK: - Public Methods
@@ -76,6 +70,14 @@ final class Coordinator: NSObject {
             photosNavigationController.viewControllers = [
                 galleryViewController
             ]
+            galleryViewController.error
+                .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] error in
+                    self.handleError(error)
+                }
+                .store(in: &bindings)
+            
             window.rootViewController = photosNavigationController
         case .undefined, .unauthorized:
             if window.rootViewController is AuthViewController {
@@ -142,7 +144,7 @@ extension Coordinator: AuthViewControllerDelegate {
             guard isLoggedIn == false else { return }
             DispatchQueue.main.async {
                 guard let url = VKClient.loginURL() else { return }
-                let viewController: WebViewController = .init(url: url) { [weak self] result in
+                let webViewController: WebViewController = .init(url: url) { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let token):
@@ -151,9 +153,9 @@ extension Coordinator: AuthViewControllerDelegate {
                         self.handleError(error)
                     }
                 }
-                viewController.modalPresentationStyle = .popover
-                viewController.presentationController?.delegate = self
-                self.window.rootViewController?.present(viewController, animated: true)
+                webViewController.modalPresentationStyle = .popover
+                webViewController.presentationController?.delegate = self
+                self.window.rootViewController?.present(webViewController, animated: true)
             }
         }
     }
@@ -170,12 +172,12 @@ extension Coordinator: GalleryViewControllerDelegate {
     /// Handles the photo tap on the gallery screen
     func didSelectItemAt(_ index: Int) {
         guard let token = authManager.getToken() else { return }
-        let photoViewController = FullScreenPhotoViewController(
+        let fullScreenPhotoViewController = FullScreenPhotoViewController(
             token: token,
             initialIndex: index
         )
         
-        photoViewController.error
+        fullScreenPhotoViewController.error
             .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] error in
@@ -184,7 +186,7 @@ extension Coordinator: GalleryViewControllerDelegate {
             .store(in: &bindings)
         
         photosNavigationController.pushViewController(
-            photoViewController,
+            fullScreenPhotoViewController,
             animated: true
         )
     }
