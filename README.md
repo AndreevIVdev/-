@@ -12,4 +12,5 @@
 |  Concurrency                | GCD             | 
 |  Package manager            | No 3pl          | 
 |  Swift Style Guide          | SwiftLint by Raywenderlinch | SwiftLint by Raywenderlinch  |
-|  Screenshot       | ![alt text](https://github.com/AndreevIVdev/NASHKODIM/blob/main/TestTaskMobileUP/Screenshots%20and%20gif's/Auth.gif?raw=true) ![alt text](https://github.com/AndreevIVdev/NASHKODIM/blob/main/TestTaskMobileUP/Screenshots%20and%20gif's/Light.gif?raw=true) ![alt text](https://github.com/AndreevIVdev/NASHKODIM/blob/main/TestTaskMobileUP/Screenshots%20and%20gif's/Dark.gif?raw=true)|
+|  Screenshot       | ![alt text](https://github.com/AndreevIVdev/NASHKODIM/blob/main/TestTaskMobileUP/Screenshots%20and%20gif's/Auth.gif?raw=true) ![alt text](https://github.com/AndreevIVdev/NASHKODIM/blob/main/TestTaskMobileUP/Screenshots%20and%20gif's/Light.gif?raw=true) ![alt text](https://github.com/AndreevIVdev/NASHKODIM/blob/main/TestTaskMobileUP/Screenshots%20and%20gif's/Dark.gif?raw=true) ![alt text](https://github.com/AndreevIVdev/NASHKODIM/blob/main/TestTaskMobileUP/Screenshots%20and%20gif's/Share.gif?raw=true)|
+
