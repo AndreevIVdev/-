@@ -5,7 +5,7 @@
 |  Description                | UI for showing photos from VK.com | 
 |  Architecture               | Reactive MVVM + Coordinator | 
 |  iOS support                | 13.0 +          |
-|  Layot                      | Code            | 
+|  Layout                      | Code            | 
 |  Framework                  | UIKit           | 
 |  Network                    | URLSession      | 
 |  User storage               | UsefDefaults    | 
