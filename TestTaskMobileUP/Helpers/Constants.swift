@@ -7,13 +7,8 @@
 
 import UIKit
 
-// MARK: - Enum Constants
-enum Constants {
-    
-    static let applicationID: String = "8115098"
-}
-
 // MARK: - Enum Design
+/// Сonstants used for creating the application interface
 enum Design {
     
     static let padding: CGFloat = 24
@@ -23,6 +18,7 @@ enum Design {
 }
 
 // MARK: - Enum Images
+/// Default images used for creating the application interface
 enum Images {
     
     static let placeholder: UIImage = .init(named: "placeholder")!
@@ -32,6 +28,7 @@ enum Images {
 }
 
 // MARK: - Enum ScreenSize
+/// Used to determine device screen size
 enum ScreenSize {
     
     static let width = UIScreen.main.bounds.size.width
@@ -41,6 +38,7 @@ enum ScreenSize {
 }
 
 // MARK: - Enum DeviceTypes
+/// Used to determine device type
 enum DeviceTypes {
     
     static let idiom = UIDevice.current.userInterfaceIdiom

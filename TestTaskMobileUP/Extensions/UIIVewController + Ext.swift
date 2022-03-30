@@ -8,6 +8,11 @@
 import UIKit
 
 extension UIViewController {
+    /// Shows default alert controller
+    /// - Parameters:
+    ///   - title: main alert title
+    ///   - message: alert body
+    ///   - completion: executes after button tap
     func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
         let alertController: UIAlertController = .init(
             title: title,

@@ -8,13 +8,17 @@
 import UIKit
 
 // MARK: - Protocol LoadingViewController
+/// View controller with activity indacator
 class LoadingViewController: UIViewController {
     
     // MARK: - Private Properties
+    /// Holds activity indicator
     private let containerView: UIView = .init()
+    /// Shows download status
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
     
     // MARK: - Public Methods
+    /// Starts loading animation
     func showLoadingView() {
         DispatchQueue.main.async {
             self.containerView.backgroundColor = .systemBackground
@@ -39,6 +43,7 @@ class LoadingViewController: UIViewController {
         }
     }
     
+    /// Stops loading animation
     func dismissLoadingView() {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()

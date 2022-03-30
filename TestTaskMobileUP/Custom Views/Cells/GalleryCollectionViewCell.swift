@@ -9,12 +9,15 @@
 import UIKit
 
 // MARK: - Class GalleryCollectionViewCell
+/// Cell with image and uniq id
 final class GalleryCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
+    /// Uniq cell id
     private(set) var id: UUID = .init()
     
     // MARK: - Private Properties
+    /// Container for image
     private let imageView: TTImageView = .init()
     
     // MARK: - Initializers
@@ -28,6 +31,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Override Methods
+    /// Prepares cell for reuse
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
@@ -36,6 +40,8 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
+    /// Initialized cell with given data
+    /// - Parameter data: image in data format
     func set(by data: Data?) {
         DispatchQueue.main.async {
             self.imageView.setImage(data)
@@ -43,6 +49,7 @@ final class GalleryCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Private Methods
+    /// Primary cell configuration
     private func configureCell() {
         contentView.addSubViews(imageView)
         imageView.frame = contentView.bounds

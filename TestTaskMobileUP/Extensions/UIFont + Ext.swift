@@ -8,16 +8,10 @@
 import UIKit
 
 extension UIFont {
-    func withTraits(traits: UIFontDescriptor.SymbolicTraits) -> UIFont {
-        let descriptor = fontDescriptor.withSymbolicTraits(traits)
-        return UIFont(descriptor: descriptor!, size: 0)
-    }
-
+    
+    /// Adds bold weight to given font
+    /// - Returns: updated font
     func bold() -> UIFont {
-        withTraits(traits: .traitBold)
-    }
-
-    func italic() -> UIFont {
-        withTraits(traits: .traitItalic)
+        .init(descriptor: fontDescriptor.withSymbolicTraits(.traitBold)!, size: 0)
     }
 }

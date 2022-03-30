@@ -8,9 +8,9 @@
 import Foundation
 import Combine
 
-// MARK: - Protocol PhotoViewModable
-/// Protocol describing necessary functions of Large Photo View Model instance
-protocol PhotoViewModable: AnyObject {
+// MARK: - Protocol FullScreenPhotoViewModable
+/// Protocol describing necessary functions of fullscreen Photo View Model instance
+protocol FullScreenPhotoViewModable: AnyObject {
     var title: CurrentValueSubject<String, Never> { get }
     var photo: CurrentValueSubject<Data?, Never> { get }
     var currentIndex: CurrentValueSubject<Int, Never> { get }
@@ -21,8 +21,8 @@ protocol PhotoViewModable: AnyObject {
     func setNewIndex(_ newIndex: Int)
 }
 
-// MARK: - Class PhotoViewModel
-class PhotoViewModel: PhotoViewModable {
+// MARK: - Class FullScreenPhotoViewModel
+class FullScreenPhotoViewModel: FullScreenPhotoViewModable {
     
     // MARK: - Publishers
     private(set) var error: PassthroughSubject<Error, Never> = .init()
@@ -35,6 +35,7 @@ class PhotoViewModel: PhotoViewModable {
     private let model: PhotoModable
     /// Subscriptions storage
     private var bindings: Set<AnyCancellable> = .init()
+    /// Uniq id for fullscreen Photo
     private var photoID: UUID = .init()
     
     // MARK: - Initializers
@@ -53,20 +54,30 @@ class PhotoViewModel: PhotoViewModable {
     }
     
     // MARK: - Public Methods
+    /// Updates selected photo index
+    /// - Parameter newIndex: new index
     func setNewIndex(_ newIndex: Int) {
         currentIndex.send(newIndex)
     }
     
+    /// Gets data for seelcted cell
+    /// - Parameters:
+    ///   - index: cell position
+    ///   - id: uniq cell id
+    ///   - completion: result in completion block
     func getCell(for index: Int, with id: UUID, completion: @escaping (Data?, UUID) -> Void) {
         model.getPhoto(size: .small, for: index, and: id, completion: completion)
     }
     
+    /// Returns count of cells
+    /// - Returns: result
     func getCellCount() -> Int {
         cellCount.value
     }
     
     
     // MARK: - Private Methods
+    /// Initializes reactive connections
     private func bindViewModelToViewModel() {
         currentIndex
             .sink { [unowned self] _ in
@@ -81,6 +92,7 @@ class PhotoViewModel: PhotoViewModable {
             .store(in: &bindings)
     }
     
+    /// Initializes reactive connections
     private func bindViewModelToModel() {
         model.photosCount
             .sink { [unowned self] count in
@@ -105,10 +117,12 @@ class PhotoViewModel: PhotoViewModable {
             .store(in: &bindings)
     }
     
+    /// Updates title on the screen
     private func updateTitle() {
         title.send(model.getTitle(for: currentIndex.value)?.convertToTime() ?? "")
     }
     
+    /// Updates photo
     private func updatePhoto() {
         photoID = UUID()
         self.photo.send(nil)
@@ -122,6 +136,8 @@ class PhotoViewModel: PhotoViewModable {
         }
     }
     
+    /// Handles occurring error locally
+    /// - Parameter error: current error
     private func localErrorHandling(_ error: Error) {
         
         if let error = error as? TTError {

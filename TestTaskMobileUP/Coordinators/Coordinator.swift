@@ -170,7 +170,7 @@ extension Coordinator: GalleryViewControllerDelegate {
     /// Handles the photo tap on the gallery screen
     func didSelectItemAt(_ index: Int) {
         guard let token = authManager.getToken() else { return }
-        let photoViewController = PhotoViewController(
+        let photoViewController = FullScreenPhotoViewController(
             token: token,
             initialIndex: index
         )

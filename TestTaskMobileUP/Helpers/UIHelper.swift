@@ -8,8 +8,12 @@
 import UIKit
 
 // MARK: - Enum UIHelper
+/// Helps create some specific interfaces
 enum UIHelper {
-
+    
+    /// Creates two columns layout for collection view
+    /// - Parameter view: superview
+    /// - Returns: created layout
     static func createTwoColumnFlowLayout(in view: UIView) -> UICollectionViewFlowLayout {
         let width = view.bounds.width
         let minimumItemSpacing: CGFloat = 1
@@ -24,6 +28,8 @@ enum UIHelper {
         return flowLayout
     }
     
+    /// Creates one row horizantal layout for collection view
+    /// - Returns: created layout
     static func createHorizontalFlowLayout() -> UICollectionViewCompositionalLayout {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalHeight(1),

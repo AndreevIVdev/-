@@ -32,8 +32,8 @@
 		8BFD75C427F08FA20074A277 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75C327F08FA20074A277 /* LoadingViewController.swift */; };
 		8BFD75CB27F094EF0074A277 /* UIIVewController + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75CA27F094EF0074A277 /* UIIVewController + Ext.swift */; };
 		8BFD75D127F0BB670074A277 /* VKResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75D027F0BB670074A277 /* VKResponses.swift */; };
-		8BFD75D627F0BD3B0074A277 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75D527F0BD3B0074A277 /* PhotoViewController.swift */; };
-		8BFD75D827F0BD760074A277 /* PhotoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75D727F0BD760074A277 /* PhotoViewModel.swift */; };
+		8BFD75D627F0BD3B0074A277 /* FullScreenPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75D527F0BD3B0074A277 /* FullScreenPhotoViewController.swift */; };
+		8BFD75D827F0BD760074A277 /* FullScreenPhotoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75D727F0BD760074A277 /* FullScreenPhotoViewModel.swift */; };
 		8BFD75DA27F0C35A0074A277 /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFD75D927F0C35A0074A277 /* PhotoModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,8 +67,8 @@
 		8BFD75C327F08FA20074A277 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		8BFD75CA27F094EF0074A277 /* UIIVewController + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIIVewController + Ext.swift"; sourceTree = "<group>"; };
 		8BFD75D027F0BB670074A277 /* VKResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKResponses.swift; sourceTree = "<group>"; };
-		8BFD75D527F0BD3B0074A277 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
-		8BFD75D727F0BD760074A277 /* PhotoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewModel.swift; sourceTree = "<group>"; };
+		8BFD75D527F0BD3B0074A277 /* FullScreenPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenPhotoViewController.swift; sourceTree = "<group>"; };
+		8BFD75D727F0BD760074A277 /* FullScreenPhotoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenPhotoViewModel.swift; sourceTree = "<group>"; };
 		8BFD75D927F0C35A0074A277 /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -298,7 +298,7 @@
 		8BFD75D227F0BD050074A277 /* PhotoViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				8BFD75D727F0BD760074A277 /* PhotoViewModel.swift */,
+				8BFD75D727F0BD760074A277 /* FullScreenPhotoViewModel.swift */,
 			);
 			path = PhotoViewModel;
 			sourceTree = "<group>";
@@ -306,7 +306,7 @@
 		8BFD75D327F0BD140074A277 /* PhotoView */ = {
 			isa = PBXGroup;
 			children = (
-				8BFD75D527F0BD3B0074A277 /* PhotoViewController.swift */,
+				8BFD75D527F0BD3B0074A277 /* FullScreenPhotoViewController.swift */,
 			);
 			path = PhotoView;
 			sourceTree = "<group>";
@@ -412,12 +412,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BF389A427EF058500B6ED75 /* TTError.swift in Sources */,
-				8BFD75D827F0BD760074A277 /* PhotoViewModel.swift in Sources */,
+				8BFD75D827F0BD760074A277 /* FullScreenPhotoViewModel.swift in Sources */,
 				8BF389B727EF241B00B6ED75 /* GalleryCollectionViewCell.swift in Sources */,
 				8BFD75CB27F094EF0074A277 /* UIIVewController + Ext.swift in Sources */,
 				8BF389B027EF214000B6ED75 /* GalleryViewController.swift in Sources */,
 				8BCA39F327EE455700288B13 /* Coordinator.swift in Sources */,
-				8BFD75D627F0BD3B0074A277 /* PhotoViewController.swift in Sources */,
+				8BFD75D627F0BD3B0074A277 /* FullScreenPhotoViewController.swift in Sources */,
 				8BFD75DA27F0C35A0074A277 /* PhotoModel.swift in Sources */,
 				8BFD75D127F0BB670074A277 /* VKResponses.swift in Sources */,
 				8BCA3A0627EE5A9400288B13 /* VKClient.swift in Sources */,

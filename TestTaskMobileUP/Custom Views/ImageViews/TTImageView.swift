@@ -8,9 +8,11 @@
 import UIKit
 
 // MARK: - Class TTImageView
+/// Custom image view with activity indacator
 class TTImageView: UIImageView {
     
     // MARK: - Private Properties
+    /// Shows download status
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
     
     // MARK: - Initializers
@@ -26,14 +28,17 @@ class TTImageView: UIImageView {
     }
     
     // MARK: - Public Methods
+    /// Starts loading animation for the view
     func startLoadingAnimation() {
         activityIndicator.startAnimating()
     }
     
+    /// Stops loading animation for the view
     func stopLoadingAnimation() {
         activityIndicator.stopAnimating()
     }
     
+    /// Sets given data as image for image view
     func setImage(_ data: Data?) {
         var image: UIImage?
         if let data = data {
@@ -50,6 +55,7 @@ class TTImageView: UIImageView {
     }
     
     // MARK: - Private Methods
+    /// Primary activity indicator configuration
     private func configureActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

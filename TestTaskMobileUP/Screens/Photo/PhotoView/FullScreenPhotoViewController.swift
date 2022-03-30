@@ -9,8 +9,8 @@ import UIKit
 import Combine
 
 // MARK: - Class PhotoViewController
-/// Large photo screen
-class PhotoViewController: UIViewController {
+/// Full screen photo
+class FullScreenPhotoViewController: UIViewController {
     
     // MARK: - Publishers
     /// Publisher that throws possible errors
@@ -18,7 +18,7 @@ class PhotoViewController: UIViewController {
     
     // MARK: - Private Properties
     /// Main datasource
-    private let viewModel: PhotoViewModable
+    private let viewModel: FullScreenPhotoViewModable
     /// Subscriptions storage
     private var bindings: Set<AnyCancellable> = .init()
     /// Lets zoom and move photo on the screen
@@ -35,7 +35,7 @@ class PhotoViewController: UIViewController {
     
     // MARK: - Initializers
     init(token: String, initialIndex: Int) {
-        viewModel = PhotoViewModel.init(
+        viewModel = FullScreenPhotoViewModel.init(
             token: token,
             currentindex: initialIndex
         )
@@ -76,6 +76,7 @@ class PhotoViewController: UIViewController {
             action: #selector(share)
         )
     }
+    
     /// Primary zooming view configuration
     private func configureScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -92,6 +93,7 @@ class PhotoViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
     }
+    
     /// Primary collection view configuration
     private func configureCollectionView() {
         collectionView.backgroundColor = .systemBackground
@@ -217,7 +219,7 @@ class PhotoViewController: UIViewController {
 }
 
 // MARK: - Extension UICollectionViewDataSource
-extension PhotoViewController: UICollectionViewDataSource {
+extension FullScreenPhotoViewController: UICollectionViewDataSource {
     
     /// Returns number of cells in current section of collection view
     /// - Parameters:
@@ -247,7 +249,7 @@ extension PhotoViewController: UICollectionViewDataSource {
 }
 
 // MARK: - Extension UICollectionViewDelegate
-extension PhotoViewController: UICollectionViewDelegate {
+extension FullScreenPhotoViewController: UICollectionViewDelegate {
     /// Handles tap on the element of collection view
     /// - Parameters:
     ///   - collectionView: current collection view
@@ -258,7 +260,7 @@ extension PhotoViewController: UICollectionViewDelegate {
 }
 
 // MARK: - Extension UIScrollViewDelegate
-extension PhotoViewController: UIScrollViewDelegate {
+extension FullScreenPhotoViewController: UIScrollViewDelegate {
     /// Selects view for zooming
     /// - Parameter scrollView: current scroll view
     /// - Returns: view for zooming
