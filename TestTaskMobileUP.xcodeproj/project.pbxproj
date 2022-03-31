@@ -20,6 +20,10 @@
 		8BCA3A0427EE499B00288B13 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA3A0327EE499B00288B13 /* WebViewController.swift */; };
 		8BCA3A0627EE5A9400288B13 /* VKClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA3A0527EE5A9400288B13 /* VKClient.swift */; };
 		8BCA3A0927EE5C0A00288B13 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCA3A0827EE5C0A00288B13 /* AuthManager.swift */; };
+		8BDD17EA27F5C20F0077E203 /* Light.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8BDD17E627F5C20F0077E203 /* Light.gif */; };
+		8BDD17EB27F5C20F0077E203 /* Share.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8BDD17E727F5C20F0077E203 /* Share.gif */; };
+		8BDD17EC27F5C20F0077E203 /* Auth.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8BDD17E827F5C20F0077E203 /* Auth.gif */; };
+		8BDD17ED27F5C20F0077E203 /* Dark.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8BDD17E927F5C20F0077E203 /* Dark.gif */; };
 		8BE5D33227F3031F00DD1A78 /* GalleryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE5D33127F3031F00DD1A78 /* GalleryModel.swift */; };
 		8BE5D33427F3035E00DD1A78 /* GalleryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE5D33327F3035E00DD1A78 /* GalleryViewModel.swift */; };
 		8BE5D33627F3149F00DD1A78 /* String + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE5D33527F3149F00DD1A78 /* String + Ext.swift */; };
@@ -53,6 +57,10 @@
 		8BCA3A0327EE499B00288B13 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		8BCA3A0527EE5A9400288B13 /* VKClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKClient.swift; sourceTree = "<group>"; };
 		8BCA3A0827EE5C0A00288B13 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		8BDD17E627F5C20F0077E203 /* Light.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Light.gif; sourceTree = "<group>"; };
+		8BDD17E727F5C20F0077E203 /* Share.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Share.gif; sourceTree = "<group>"; };
+		8BDD17E827F5C20F0077E203 /* Auth.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Auth.gif; sourceTree = "<group>"; };
+		8BDD17E927F5C20F0077E203 /* Dark.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Dark.gif; sourceTree = "<group>"; };
 		8BE5D33127F3031F00DD1A78 /* GalleryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryModel.swift; sourceTree = "<group>"; };
 		8BE5D33327F3035E00DD1A78 /* GalleryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewModel.swift; sourceTree = "<group>"; };
 		8BE5D33527F3149F00DD1A78 /* String + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Ext.swift"; sourceTree = "<group>"; };
@@ -122,6 +130,7 @@
 				8BFD75C127F08F7D0074A277 /* Custom Views */,
 				8BFD75CF27F0B91F0074A277 /* Codable Models */,
 				8BCA39E527EE450400288B13 /* Supporting Files */,
+				8BDD17E527F5C20F0077E203 /* Screenshots and gif's */,
 			);
 			path = TestTaskMobileUP;
 			sourceTree = "<group>";
@@ -202,6 +211,17 @@
 				8BCA3A0327EE499B00288B13 /* WebViewController.swift */,
 			);
 			path = WebView;
+			sourceTree = "<group>";
+		};
+		8BDD17E527F5C20F0077E203 /* Screenshots and gif's */ = {
+			isa = PBXGroup;
+			children = (
+				8BDD17E627F5C20F0077E203 /* Light.gif */,
+				8BDD17E727F5C20F0077E203 /* Share.gif */,
+				8BDD17E827F5C20F0077E203 /* Auth.gif */,
+				8BDD17E927F5C20F0077E203 /* Dark.gif */,
+			);
+			path = "Screenshots and gif's";
 			sourceTree = "<group>";
 		};
 		8BE5D32E27F302E700DD1A78 /* GalleryViewModel */ = {
@@ -381,9 +401,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BDD17EC27F5C20F0077E203 /* Auth.gif in Resources */,
 				8BCA39DE27EE44F200288B13 /* LaunchScreen.storyboard in Resources */,
+				8BDD17EA27F5C20F0077E203 /* Light.gif in Resources */,
+				8BDD17EB27F5C20F0077E203 /* Share.gif in Resources */,
 				8BF8134227F3183500032B40 /* Localizable.strings in Resources */,
 				8B1DD72527F4F4DA000E26A5 /* README.md in Resources */,
+				8BDD17ED27F5C20F0077E203 /* Dark.gif in Resources */,
 				8BCA39DB27EE44F200288B13 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
